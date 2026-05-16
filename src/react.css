@@ -1,0 +1,47 @@
+.sidebar-note {
+  margin-top: auto;
+}
+
+.sidebar-note p {
+  margin: 12px 0 0;
+}
+
+.shot-content {
+  padding: 18px;
+}
+
+.shot-kpis {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.toolbar-between {
+  justify-content: space-between;
+}
+
+.flush {
+  margin: 0;
+}
+
+.compact-text {
+  margin: 4px 0 0;
+}
+
+.message-stream {
+  margin-top: 22px;
+  max-height: 460px;
+  overflow: auto;
+}
+
+.card-list {
+  margin-top: 16px;
+}
+
+.chart-note {
+  margin: 12px 0 0;
+}
+
+.widget-button {
+  width: max-content;
+  color: var(--fg);
+  background: white;
+}

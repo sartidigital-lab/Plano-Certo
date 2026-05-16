@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Plano Certo — desktop app</title>
+  <link rel="stylesheet" href="css_plano-certo.css">
+</head>
+<body>
+  <main class="desktop-window">
+    <div class="shot-bar">
+      <div class="dot-row"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+      Plano Certo Console · gestor@corretora
+    </div>
+    <div class="app-layout" style="min-height:812px">
+      <aside class="sidebar" style="height:auto;position:static">
+        <a class="brand" href="index.html"><span class="brand__mark">PC</span><span>Plano Certo</span></a>
+        <nav class="side-nav">
+          <a href="dashboard.html" aria-current="page"><span>Central de leads</span><strong>42</strong></a>
+          <a href="inbox.html"><span>Atendimento</span><strong>16</strong></a>
+          <a href="outbound.html"><span>Prospecção</span><strong>9</strong></a>
+          <a href="pipeline.html"><span>Pipeline</span><strong>31</strong></a>
+        </nav>
+      </aside>
+      <section class="workspace">
+        <div class="workspace__top">
+          <div class="workspace__title">
+            <p class="eyebrow">Console do gestor</p>
+            <h1>Distribuição de leads</h1>
+            <p class="muted">Tela densa para acompanhar corretores, SLA e qualidade da qualificação.</p>
+          </div>
+          <div class="toolbar"><button class="btn">Exportar</button><button class="btn btn--primary">Redistribuir fila</button></div>
+        </div>
+        <div class="kpi-row">
+          <article class="card metric"><strong>6</strong><span>corretores ativos</span></article>
+          <article class="card metric"><strong>91%</strong><span>SLA cumprido</span></article>
+          <article class="card metric"><strong>12</strong><span>sem dono</span></article>
+          <article class="card metric"><strong>4.2</strong><span>qualidade média</span></article>
+        </div>
+        <div class="grid grid--3">
+          <article class="card"><h3>Marina Lopes</h3><p class="muted">Especialista PME SP · 8 leads · melhor conversão em clínicas.</p><span class="status status--success">Disponível</span></article>
+          <article class="card"><h3>Rafael Lima</h3><p class="muted">Sul/Sudeste · 11 leads · forte em empresas acima de 80 vidas.</p><span class="status status--warn">Fila alta</span></article>
+          <article class="card"><h3>Ana Prado</h3><p class="muted">RJ/MG · 5 leads · bom tempo de resposta em WhatsApp.</p><span class="status status--success">Disponível</span></article>
+        </div>
+      </section>
+    </div>
+  </main>
+</body>
+</html>

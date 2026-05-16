@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Plano Certo — pipeline</title>
+  <link rel="stylesheet" href="css_plano-certo.css">
+</head>
+<body class="app-shell">
+  <div class="app-layout">
+    <aside class="sidebar">
+      <a class="brand" href="index.html"><span class="brand__mark">PC</span><span>Plano Certo</span></a>
+      <nav class="side-nav" aria-label="Produto">
+        <a href="dashboard.html"><span>Dashboard</span><strong>42</strong></a>
+        <a href="inbox.html"><span>Inbox</span><strong>16</strong></a>
+        <a href="outbound.html"><span>Outbound</span><strong>9</strong></a>
+        <a href="pipeline.html" aria-current="page"><span>Pipeline</span><strong>31</strong></a>
+      </nav>
+    </aside>
+
+    <main class="workspace">
+      <div class="workspace__top">
+        <div class="workspace__title">
+          <p class="eyebrow">Vendas PME</p>
+          <h1>Pipeline de vendas</h1>
+          <p class="muted">Arraste oportunidades entre etapas para simular o acompanhamento comercial.</p>
+        </div>
+        <button class="btn btn--primary">Nova oportunidade</button>
+      </div>
+
+      <section class="kanban" aria-label="Pipeline">
+        <div class="column" data-pipeline-column>
+          <div class="column__head"><strong>Qualificado</strong><span>R$ —</span></div>
+          <article class="pipeline-card" data-pipeline-card><strong>Studio Atlas</strong><p class="muted">14 vidas · precisa entender coparticipação</p><span class="status status--info">Nutrir</span></article>
+          <article class="pipeline-card" data-pipeline-card><strong>Grupo Kairós</strong><p class="muted">46 vidas · decisão em 30 dias</p><span class="status status--success">Quente</span></article>
+        </div>
+        <div class="column" data-pipeline-column>
+          <div class="column__head"><strong>Em cotação</strong><span>5 empresas</span></div>
+          <article class="pipeline-card" data-pipeline-card><strong>Clínica Soma</strong><p class="muted">32 vidas · rede Pinheiros e Osasco</p><span class="status status--success">Prioridade</span></article>
+          <article class="pipeline-card" data-pipeline-card><strong>Logística Vetta</strong><p class="muted">72 vidas · troca por reajuste</p><span class="status status--warn">Atenção</span></article>
+        </div>
+        <div class="column" data-pipeline-column>
+          <div class="column__head"><strong>Proposta enviada</strong><span>3 empresas</span></div>
+          <article class="pipeline-card" data-pipeline-card><strong>Ferrovia Norte</strong><p class="muted">118 vidas · diretoria revisando</p><span class="status status--warn">Retorno 16h</span></article>
+        </div>
+        <div class="column" data-pipeline-column>
+          <div class="column__head"><strong>Fechamento</strong><span>2 empresas</span></div>
+          <article class="pipeline-card" data-pipeline-card><strong>Rede Terra</strong><p class="muted">24 vidas · aguardando documentação</p><span class="status status--success">Assinatura</span></article>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script src="js_plano-certo.js"></script>
+</body>
+</html>
