@@ -278,3 +278,19 @@ create policy "authenticated manage conversations" on public.conversations for a
 create policy "authenticated manage messages" on public.messages for all to authenticated using (true) with check (true);
 create policy "authenticated manage agent runs" on public.agent_runs for all to authenticated using (true) with check (true);
 create policy "authenticated manage approvals" on public.human_approvals for all to authenticated using (true) with check (true);
+
+create index if not exists idx_health_plans_operator_id on public.health_plans(operator_id);
+create index if not exists idx_health_plans_administrator_id on public.health_plans(administrator_id);
+create index if not exists idx_health_plans_status on public.health_plans(status);
+create index if not exists idx_health_plans_region_scope on public.health_plans(region_scope);
+create index if not exists idx_price_tables_plan_id on public.price_tables(health_plan_id);
+create index if not exists idx_price_tables_validity on public.price_tables(valid_from, valid_until);
+create index if not exists idx_price_tables_status on public.price_tables(status);
+create index if not exists idx_price_table_rows_table_id on public.price_table_rows(price_table_id);
+create index if not exists idx_companies_trade_name on public.companies(trade_name);
+create index if not exists idx_leads_status_score on public.leads(status, score desc);
+create index if not exists idx_conversations_lead_id on public.conversations(lead_id);
+create index if not exists idx_messages_conversation_created on public.messages(conversation_id, created_at);
+create index if not exists idx_ans_chunks_document_id on public.ans_document_chunks(ans_document_id);
+create index if not exists idx_agent_runs_agent_created on public.agent_runs(agent_id, created_at desc);
+create index if not exists idx_human_approvals_status_created on public.human_approvals(status, created_at desc);
