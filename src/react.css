@@ -45,3 +45,175 @@
   color: var(--fg);
   background: white;
 }
+
+.catalog-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.65fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.catalog-header,
+.catalog-row {
+  display: grid;
+  grid-template-columns: minmax(220px, 1.3fr) minmax(120px, 0.7fr) minmax(180px, 1fr) minmax(100px, 0.6fr) minmax(100px, 0.5fr);
+  gap: 12px;
+  align-items: center;
+  min-width: 860px;
+  padding: 13px 16px;
+}
+
+.price-header,
+.price-row {
+  display: grid;
+  grid-template-columns: minmax(220px, 1.2fr) minmax(120px, 0.7fr) minmax(190px, 0.95fr) minmax(120px, 0.65fr) minmax(100px, 0.5fr);
+  gap: 12px;
+  align-items: center;
+  min-width: 860px;
+  padding: 13px 16px;
+}
+
+.catalog-header,
+.price-header {
+  border-bottom: 1px solid var(--border);
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.catalog-row,
+.price-row {
+  width: 100%;
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  color: var(--fg);
+  background: var(--surface);
+  text-align: left;
+}
+
+.catalog-row:last-child,
+.price-row:last-child {
+  border-bottom: 0;
+}
+
+.catalog-row:hover,
+.catalog-row.is-active,
+.price-row:hover,
+.price-row.is-active {
+  background: oklch(98% 0.006 250);
+}
+
+.detail-panel,
+.knowledge-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  padding: 18px;
+}
+
+.detail-list {
+  display: grid;
+  gap: 12px;
+  margin: 18px 0 0;
+}
+
+.detail-list div {
+  display: grid;
+  gap: 4px;
+  border-bottom: 1px solid color-mix(in oklch, var(--border), transparent 35%);
+  padding-bottom: 11px;
+}
+
+.detail-list div:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.detail-list dt {
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.detail-list dd {
+  margin: 0;
+  line-height: 1.4;
+}
+
+.agent-readiness {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 18px;
+}
+
+.mini-price-table {
+  display: grid;
+  margin-top: 18px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.mini-price-head,
+.mini-price-row {
+  display: grid;
+  grid-template-columns: 0.7fr 1fr 1fr;
+  gap: 8px;
+  align-items: center;
+  padding: 10px 12px;
+}
+
+.mini-price-head {
+  color: var(--muted);
+  background: oklch(98% 0.006 250);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.mini-price-row {
+  border-top: 1px solid var(--border);
+  font-size: 14px;
+}
+
+.knowledge-list {
+  display: grid;
+  gap: 12px;
+}
+
+.knowledge-card {
+  width: 100%;
+  text-align: left;
+  transition: 160ms ease;
+}
+
+.knowledge-card p {
+  margin: 10px 0 0;
+}
+
+.knowledge-card:hover,
+.knowledge-card.is-active {
+  border-color: color-mix(in oklch, var(--accent), var(--border) 42%);
+  background: oklch(98% 0.006 250);
+}
+
+.citation-box {
+  display: grid;
+  gap: 12px;
+  margin-top: 18px;
+  border: 1px solid color-mix(in oklch, var(--accent), var(--border) 45%);
+  border-radius: var(--radius);
+  padding: 14px;
+  background: var(--accent-soft);
+}
+
+.citation-box p {
+  margin: 0;
+  line-height: 1.45;
+}
+
+@media (max-width: 1180px) {
+  .catalog-layout {
+    grid-template-columns: 1fr;
+  }
+}

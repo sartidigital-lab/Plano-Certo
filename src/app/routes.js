@@ -3,6 +3,9 @@ import DesktopApp from '../pages/DesktopApp.jsx';
 import Home from '../pages/Home.jsx';
 import Inbox from '../pages/Inbox.jsx';
 import Landing from '../pages/Landing.jsx';
+import AnsBase from '../pages/AnsBase.jsx';
+import PlanCatalog from '../pages/PlanCatalog.jsx';
+import PriceTables from '../pages/PriceTables.jsx';
 import MobileAndroid from '../pages/MobileAndroid.jsx';
 import Outbound from '../pages/Outbound.jsx';
 import Pipeline from '../pages/Pipeline.jsx';
@@ -15,6 +18,9 @@ export const routes = {
   '/inbox': Inbox,
   '/outbound': Outbound,
   '/pipeline': Pipeline,
+  '/catalogo': PlanCatalog,
+  '/tabelas': PriceTables,
+  '/ans': AnsBase,
   '/mobile': MobileAndroid,
   '/desktop': DesktopApp,
   '/widgets': Widgets,

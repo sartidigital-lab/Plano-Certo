@@ -6,6 +6,9 @@ const productNav = [
   ['Inbox', '/inbox', '16'],
   ['Outbound', '/outbound', '9'],
   ['Pipeline', '/pipeline', '31'],
+  ['Catálogo', '/catalogo', '24'],
+  ['Tabelas', '/tabelas', '8'],
+  ['Base ANS', '/ans', '36'],
   ['Widgets', '/widgets', '3'],
 ];
 
