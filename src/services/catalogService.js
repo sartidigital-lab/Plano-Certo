@@ -13,7 +13,7 @@ export async function fetchPlanCatalog() {
     .select('id, product_name, ans_register, segment, contract_type, region_scope, network_summary, copay_rule, eligibility_summary, status, confidence_level, operators(name), administrators(name)')
     .order('product_name');
 
-  if (error || !data) {
+  if (error || !data || data.length === 0) {
     console.warn('Using mock plan catalog after Supabase error:', error?.message);
     return planCatalog;
   }
@@ -51,7 +51,7 @@ export async function fetchPriceTables() {
     .select('id, region, lives_min, lives_max, valid_from, valid_until, source_label, status, operators(name), administrators(name), health_plans(product_name), price_table_rows(age_band, accommodation, monthly_price)')
     .order('valid_from', { ascending: false });
 
-  if (error || !data) {
+  if (error || !data || data.length === 0) {
     console.warn('Using mock price tables after Supabase error:', error?.message);
     return priceTables;
   }

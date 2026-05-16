@@ -26,6 +26,7 @@ Manter o banco preparado para crescer de protótipo para CRM operacional com age
   - Base ANS
   - Agentes
 - Manter fallback mock enquanto o banco amadurece.
+- Validar cada carga com `supabase/verification.sql` antes de apontar Vercel para o projeto real.
 
 ### Fase 3 - Operação CRM
 - Persistir leads, conversas, mensagens, oportunidades e aprovações.
@@ -47,6 +48,21 @@ Manter o banco preparado para crescer de protótipo para CRM operacional com age
 - Tabelas de preço próximas do vencimento.
 - Documentos ANS com status `review`.
 - Queries lentas por tabela operacional.
+
+## Verificação de carga
+
+Depois de aplicar `supabase/schema.sql` e `supabase/seed.sql`, executar:
+
+```sql
+\i supabase/verification.sql
+```
+
+Critérios mínimos:
+- `health_plans` com pelo menos 4 registros.
+- `price_tables` com pelo menos 3 registros.
+- `price_table_rows` sem duplicidade por tabela/faixa/acomodação.
+- todas as tabelas públicas com RLS ativo.
+- índices `idx_*` criados para tabelas operacionais.
 
 ## Índices iniciais
 

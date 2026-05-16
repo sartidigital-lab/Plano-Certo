@@ -13,7 +13,7 @@ export async function fetchAnsKnowledge() {
     .select('id, title, document_type, source_url, version_label, status')
     .order('title');
 
-  if (error || !data) {
+  if (error || !data || data.length === 0) {
     console.warn('Using mock ANS knowledge after Supabase error:', error?.message);
     return ansKnowledge;
   }

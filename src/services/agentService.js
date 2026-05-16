@@ -13,7 +13,7 @@ export async function fetchAgentProfiles() {
     .select('id, name, role, status, autonomy_level, tone_of_voice, humanization_score, agent_skills(skill_name), agent_guardrails(rule_text)')
     .order('name');
 
-  if (error || !data) {
+  if (error || !data || data.length === 0) {
     console.warn('Using mock agent profiles after Supabase error:', error?.message);
     return agentProfiles;
   }

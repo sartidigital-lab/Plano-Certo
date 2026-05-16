@@ -1,19 +1,20 @@
 import { useMemo, useState } from 'react';
 import Metric from '../components/ui/Metric.jsx';
 import WorkspaceTop from '../components/workspace/WorkspaceTop.jsx';
-import { listPlanCatalog } from '../services/catalogService.js';
+import useAsyncResource from '../hooks/useAsyncResource.js';
+import { fetchPlanCatalog, listPlanCatalog } from '../services/catalogService.js';
 import ProductShell from '../layouts/ProductShell.jsx';
 
 export default function PlanCatalog({ path, navigate }) {
-  const planCatalog = listPlanCatalog();
+  const { data: planCatalog, status } = useAsyncResource(fetchPlanCatalog, listPlanCatalog(), []);
   const [query, setQuery] = useState('');
-  const [activeId, setActiveId] = useState(planCatalog[0].id);
+  const [activeId, setActiveId] = useState(planCatalog[0]?.id || '');
 
   const filteredPlans = useMemo(() => {
     const term = query.trim().toLowerCase();
     if (!term) return planCatalog;
     return planCatalog.filter((plan) => Object.values(plan).join(' ').toLowerCase().includes(term));
-  }, [query]);
+  }, [planCatalog, query]);
 
   const activePlan = planCatalog.find((plan) => plan.id === activeId) || filteredPlans[0] || planCatalog[0];
 
@@ -58,7 +59,7 @@ export default function PlanCatalog({ path, navigate }) {
               <p className="eyebrow">Produto selecionado</p>
               <h3 className="flush">{activePlan.product}</h3>
             </div>
-            <span className="pill">{activePlan.confidence}</span>
+            <span className="pill">{status === 'loading' ? 'Carregando' : activePlan.confidence}</span>
           </div>
           <dl className="detail-list">
             <div><dt>Registro ANS</dt><dd>{activePlan.ansRegister}</dd></div>

@@ -1,19 +1,20 @@
 import { useMemo, useState } from 'react';
 import Metric from '../components/ui/Metric.jsx';
 import WorkspaceTop from '../components/workspace/WorkspaceTop.jsx';
-import { listAnsKnowledge } from '../services/knowledgeService.js';
+import useAsyncResource from '../hooks/useAsyncResource.js';
+import { fetchAnsKnowledge, listAnsKnowledge } from '../services/knowledgeService.js';
 import ProductShell from '../layouts/ProductShell.jsx';
 
 export default function AnsBase({ path, navigate }) {
-  const ansKnowledge = listAnsKnowledge();
+  const { data: ansKnowledge, status } = useAsyncResource(fetchAnsKnowledge, listAnsKnowledge(), []);
   const [query, setQuery] = useState('');
-  const [activeId, setActiveId] = useState(ansKnowledge[0].id);
+  const [activeId, setActiveId] = useState(ansKnowledge[0]?.id || '');
 
   const filteredDocs = useMemo(() => {
     const term = query.trim().toLowerCase();
     if (!term) return ansKnowledge;
     return ansKnowledge.filter((doc) => Object.values(doc).join(' ').toLowerCase().includes(term));
-  }, [query]);
+  }, [ansKnowledge, query]);
 
   const activeDoc = ansKnowledge.find((doc) => doc.id === activeId) || filteredDocs[0] || ansKnowledge[0];
 
@@ -55,7 +56,7 @@ export default function AnsBase({ path, navigate }) {
               <p className="eyebrow">Documento selecionado</p>
               <h3 className="flush">{activeDoc.title}</h3>
             </div>
-            <span className="pill">{activeDoc.type}</span>
+            <span className="pill">{status === 'loading' ? 'Carregando' : activeDoc.type}</span>
           </div>
           <dl className="detail-list">
             <div><dt>Fonte</dt><dd>{activeDoc.source}</dd></div>

@@ -287,6 +287,7 @@ create index if not exists idx_price_tables_plan_id on public.price_tables(healt
 create index if not exists idx_price_tables_validity on public.price_tables(valid_from, valid_until);
 create index if not exists idx_price_tables_status on public.price_tables(status);
 create index if not exists idx_price_table_rows_table_id on public.price_table_rows(price_table_id);
+create unique index if not exists idx_price_table_rows_unique_band on public.price_table_rows(price_table_id, age_band, accommodation);
 create index if not exists idx_companies_trade_name on public.companies(trade_name);
 create index if not exists idx_leads_status_score on public.leads(status, score desc);
 create index if not exists idx_conversations_lead_id on public.conversations(lead_id);

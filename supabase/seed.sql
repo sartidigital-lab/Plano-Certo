@@ -43,7 +43,9 @@ insert into public.price_table_rows (price_table_id, age_band, accommodation, mo
   ('00000000-0000-0000-0000-000000000401', '24-28', 'enfermaria', 262.30),
   ('00000000-0000-0000-0000-000000000401', '24-28', 'apartamento', 288.50),
   ('00000000-0000-0000-0000-000000000401', '29-33', 'enfermaria', 315.90),
-  ('00000000-0000-0000-0000-000000000401', '29-33', 'apartamento', 347.50);
+  ('00000000-0000-0000-0000-000000000401', '29-33', 'apartamento', 347.50)
+on conflict (price_table_id, age_band, accommodation) do update
+set monthly_price = excluded.monthly_price;
 
 insert into public.ans_documents (id, title, source_url, document_type, version_label, status) values
   ('00000000-0000-0000-0000-000000000501', 'Rol de Procedimentos e Eventos em Saúde', 'https://www.gov.br/ans/', 'Cobertura obrigatória', 'mock', 'active'),

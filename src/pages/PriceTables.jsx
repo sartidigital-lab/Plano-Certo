@@ -1,19 +1,20 @@
 import { useMemo, useState } from 'react';
 import Metric from '../components/ui/Metric.jsx';
 import WorkspaceTop from '../components/workspace/WorkspaceTop.jsx';
-import { listPriceTables } from '../services/catalogService.js';
+import useAsyncResource from '../hooks/useAsyncResource.js';
+import { fetchPriceTables, listPriceTables } from '../services/catalogService.js';
 import ProductShell from '../layouts/ProductShell.jsx';
 
 export default function PriceTables({ path, navigate }) {
-  const priceTables = listPriceTables();
+  const { data: priceTables, status } = useAsyncResource(fetchPriceTables, listPriceTables(), []);
   const [query, setQuery] = useState('');
-  const [activeId, setActiveId] = useState(priceTables[0].id);
+  const [activeId, setActiveId] = useState(priceTables[0]?.id || '');
 
   const filteredTables = useMemo(() => {
     const term = query.trim().toLowerCase();
     if (!term) return priceTables;
     return priceTables.filter((table) => Object.values(table).flat().join(' ').toLowerCase().includes(term));
-  }, [query]);
+  }, [priceTables, query]);
 
   const activeTable = priceTables.find((table) => table.id === activeId) || filteredTables[0] || priceTables[0];
 
@@ -58,7 +59,7 @@ export default function PriceTables({ path, navigate }) {
               <p className="eyebrow">Tabela ativa</p>
               <h3 className="flush">{activeTable.product}</h3>
             </div>
-            <span className="pill">{activeTable.region}</span>
+            <span className="pill">{status === 'loading' ? 'Carregando' : activeTable.region}</span>
           </div>
           <dl className="detail-list">
             <div><dt>Operadora</dt><dd>{activeTable.operator}</dd></div>

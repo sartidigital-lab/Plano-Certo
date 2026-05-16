@@ -1,14 +1,15 @@
 import { useMemo, useState } from 'react';
 import Metric from '../components/ui/Metric.jsx';
 import WorkspaceTop from '../components/workspace/WorkspaceTop.jsx';
-import { listAgentProfiles, listAgentReviewQueue, listAgentRuns, listVoicePrinciples } from '../services/agentService.js';
+import useAsyncResource from '../hooks/useAsyncResource.js';
+import { fetchAgentProfiles, listAgentProfiles, listAgentReviewQueue, listAgentRuns, listVoicePrinciples } from '../services/agentService.js';
 import ProductShell from '../layouts/ProductShell.jsx';
 
 export default function AgentConsole({ path, navigate }) {
-  const agentProfiles = listAgentProfiles();
+  const { data: agentProfiles, status } = useAsyncResource(fetchAgentProfiles, listAgentProfiles(), []);
   const agentRuns = listAgentRuns();
   const voicePrinciples = listVoicePrinciples();
-  const [activeAgentId, setActiveAgentId] = useState(agentProfiles[0].id);
+  const [activeAgentId, setActiveAgentId] = useState(agentProfiles[0]?.id || '');
   const [reviews, setReviews] = useState(listAgentReviewQueue());
   const activeAgent = useMemo(
     () => agentProfiles.find((agent) => agent.id === activeAgentId) || agentProfiles[0],
@@ -57,7 +58,7 @@ export default function AgentConsole({ path, navigate }) {
               <p className="eyebrow">Agente selecionado</p>
               <h3 className="flush">{activeAgent.name}</h3>
             </div>
-            <span className="pill">{activeAgent.autonomy}</span>
+            <span className="pill">{status === 'loading' ? 'Carregando' : activeAgent.autonomy}</span>
           </div>
           <dl className="detail-list">
             <div><dt>Tom de voz</dt><dd>{activeAgent.tone}</dd></div>
