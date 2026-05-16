@@ -294,3 +294,88 @@ export const quoteScenarios = [
     selectedTableIds: ['tab-amil-sp-2026-05'],
   },
 ];
+
+export const agentProfiles = [
+  {
+    id: 'agent-attendance',
+    name: 'Agente de atendimento',
+    role: 'Responde dúvidas iniciais, coleta contexto e prepara handoff.',
+    status: 'Ativo',
+    tone: 'Calmo, acolhedor e objetivo',
+    autonomy: 'Baixa',
+    humanScore: 91,
+    guardrails: ['Não parecer scriptado', 'Confirmar entendimento antes de orientar', 'Encaminhar dúvidas sensíveis'],
+    skills: ['Escuta ativa', 'Qualificação PME', 'Resumo de conversa'],
+  },
+  {
+    id: 'agent-outbound',
+    name: 'Agente outbound',
+    role: 'Pesquisa empresas, gera abordagem e controla cadência com permissão.',
+    status: 'Ativo',
+    tone: 'Consultivo, breve e respeitoso',
+    autonomy: 'Média',
+    humanScore: 88,
+    guardrails: ['Pedir permissão', 'Não insistir após negativa', 'Evitar promessa de economia'],
+    skills: ['Prospecção local', 'Personalização por sinal público', 'Follow-up elegante'],
+  },
+  {
+    id: 'agent-quote',
+    name: 'Agente de cotação',
+    role: 'Cruza região, vidas, catálogo e tabelas para preparar cenários.',
+    status: 'Revisão',
+    tone: 'Preciso, transparente e sem exagero comercial',
+    autonomy: 'Baixa',
+    humanScore: 84,
+    guardrails: ['Usar tabela vigente', 'Mostrar premissas', 'Solicitar validação humana'],
+    skills: ['Comparação de planos', 'Faixas etárias', 'Resumo de proposta'],
+  },
+  {
+    id: 'agent-compliance',
+    name: 'Agente compliance ANS',
+    role: 'Revisa mensagens sobre cobertura, carência, reajuste e registro.',
+    status: 'Ativo',
+    tone: 'Técnico, claro e seguro',
+    autonomy: 'Alta para revisão',
+    humanScore: 86,
+    guardrails: ['Responder com fonte', 'Bloquear promessa sem evidência', 'Sinalizar risco regulatório'],
+    skills: ['Base ANS', 'Citações', 'Classificação de risco'],
+  },
+];
+
+export const agentReviewQueue = [
+  {
+    id: 'review-1',
+    lead: 'Clinica Soma',
+    agent: 'Agente outbound',
+    type: 'WhatsApp D0',
+    risk: 'Médio',
+    status: 'Aguardando aprovação',
+    suggested: 'Oi, Marina. Vi que a Clinica Soma está com equipe em crescimento e queria entender se faz sentido revisar o plano atual. Posso te mandar um comparativo objetivo de caminhos para PME?',
+    whyHuman: 'Mensagem usa contexto real, pede permissão e não promete preço.',
+  },
+  {
+    id: 'review-2',
+    lead: 'Ferrovia Norte',
+    agent: 'Agente de cotação',
+    type: 'Resumo de proposta',
+    risk: 'Alto',
+    status: 'Revisar antes de enviar',
+    suggested: 'Com os dados atuais, encontrei alternativas que podem ser analisadas para a região de Curitiba. Antes de falar em economia, preciso confirmar rede, dependentes e contrato atual.',
+    whyHuman: 'Evita promessa de redução e pede dados faltantes antes de cotar.',
+  },
+];
+
+export const voicePrinciples = [
+  'Escrever como uma pessoa útil, não como campanha automática.',
+  'Usar frases curtas, contexto real e uma pergunta por vez.',
+  'Assumir incerteza quando faltar dado: “preciso confirmar antes de te afirmar”.',
+  'Nunca prometer preço, cobertura ou redução de reajuste sem fonte e tabela vigente.',
+  'Encerrar com respeito quando houver negativa ou silêncio prolongado.',
+];
+
+export const agentRuns = [
+  ['10:42', 'Agente outbound', 'Gerou abordagem para Clinica Soma com sinal Google Business.', 'Aprovável'],
+  ['10:38', 'Agente compliance ANS', 'Bloqueou resposta sobre carência sem contexto de contratação.', 'Bloqueado'],
+  ['10:22', 'Agente de cotação', 'Calculou cenário enfermaria/apartamento com tabela Amil SP.', 'Revisão'],
+  ['09:58', 'Agente de atendimento', 'Resumiu conversa e recomendou handoff para corretor.', 'Concluído'],
+];

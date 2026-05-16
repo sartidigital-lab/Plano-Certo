@@ -329,3 +329,121 @@
     overflow-x: auto;
   }
 }
+
+.agent-console-grid {
+  display: grid;
+  grid-template-columns: 320px minmax(0, 1fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.agent-list,
+.review-list,
+.run-list {
+  display: grid;
+  gap: 12px;
+}
+
+.agent-console-card,
+.review-card {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  padding: 14px;
+  text-align: left;
+}
+
+.agent-console-card p {
+  margin: 10px 0 0;
+  line-height: 1.4;
+}
+
+.agent-console-card:hover,
+.agent-console-card.is-active {
+  border-color: color-mix(in oklch, var(--accent), var(--border) 42%);
+  background: oklch(98% 0.006 250);
+}
+
+.agent-console-wide {
+  grid-column: 1 / -1;
+}
+
+.agent-skill-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.guardrail-box {
+  display: grid;
+  gap: 12px;
+  margin-top: 18px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+  background: oklch(99% 0.003 250);
+}
+
+.guardrail-box ul,
+.voice-list {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding-left: 20px;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.review-message {
+  margin: 14px 0 10px;
+  border-left: 3px solid var(--accent);
+  padding-left: 12px;
+  line-height: 1.5;
+  color: var(--fg);
+}
+
+.run-item {
+  display: grid;
+  grid-template-columns: 48px minmax(100px, 0.7fr) minmax(0, 1fr) 86px;
+  gap: 10px;
+  align-items: start;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px;
+  background: oklch(99% 0.003 250);
+}
+
+.run-item strong {
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.run-item span {
+  font-weight: 700;
+}
+
+.run-item p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.run-item em {
+  color: var(--accent-strong);
+  font-style: normal;
+  font-weight: 700;
+}
+
+@media (max-width: 1180px) {
+  .agent-console-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 760px) {
+  .run-item {
+    grid-template-columns: 1fr;
+  }
+}
