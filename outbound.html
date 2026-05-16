@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Plano Certo — agente outbound</title>
-  <link rel="stylesheet" href="css/plano-certo.css">
+  <title>Plano Certo - agente outbound</title>
+  <link rel="stylesheet" href="css_plano-certo.css">
 </head>
 <body class="app-shell">
   <div class="app-layout">
@@ -16,54 +16,132 @@
         <a href="outbound.html" aria-current="page"><span>Outbound</span><strong>9</strong></a>
         <a href="pipeline.html"><span>Pipeline</span><strong>31</strong></a>
       </nav>
+      <div class="card" style="margin-top:auto">
+        <span class="pill">Regra do agente</span>
+        <p style="margin:12px 0 0" class="muted">O agente pesquisa e prepara contexto; o primeiro disparo em massa depende de opt-in, base permitida ou aprovacao humana.</p>
+      </div>
     </aside>
 
     <main class="workspace">
       <div class="workspace__top">
         <div class="workspace__title">
-          <p class="eyebrow">Prospecção B2B</p>
-          <h1>Agente outbound</h1>
-          <p class="muted">Monte uma abordagem para empresas encontradas no Google, Instagram ou lista interna.</p>
+          <p class="eyebrow">Outbound assistido</p>
+          <h1>Google encontra. WhatsApp converte.</h1>
+          <p class="muted">Estruture listas locais, sinais publicos, abordagens consultivas e follow-ups com controle humano.</p>
+        </div>
+        <div class="toolbar">
+          <button class="btn">Pausar agente</button>
+          <button class="btn btn--primary">Aprovar 9 abordagens</button>
         </div>
       </div>
 
+      <section class="kpi-row" aria-label="Indicadores do agente outbound">
+        <article class="card metric"><strong>126</strong><span>empresas mapeadas no Google</span></article>
+        <article class="card metric"><strong>41</strong><span>com telefone validado</span></article>
+        <article class="card metric"><strong>9</strong><span>prontas para aprovacao</span></article>
+        <article class="card metric"><strong>18%</strong><span>resposta em sequencias WhatsApp</span></article>
+      </section>
+
+      <section class="outbound-flow" aria-label="Fluxo outbound">
+        <article class="flow-step is-active">
+          <span class="pill">1. Google</span>
+          <h3>Descobrir empresas</h3>
+          <p class="muted">Busca por segmento, cidade e sinais de empresa com equipe: site, Google Business, vagas, endereco e telefone publico.</p>
+        </article>
+        <article class="flow-step">
+          <span class="pill">2. Enriquecimento</span>
+          <h3>Montar contexto</h3>
+          <p class="muted">Segmento, porte estimado, decisores provaveis, dor de plano de saude e motivo real para contato.</p>
+        </article>
+        <article class="flow-step">
+          <span class="pill">3. WhatsApp</span>
+          <h3>Abordar com permissao</h3>
+          <p class="muted">Mensagem curta, util e auditavel. O agente sugere, registra consentimento e encaminha respostas quentes.</p>
+        </article>
+        <article class="flow-step">
+          <span class="pill">4. Corretor</span>
+          <h3>Assumir oportunidade</h3>
+          <p class="muted">Repasse com resumo, score, objeções, proxima acao e historico completo da conversa.</p>
+        </article>
+      </section>
+
       <section class="data-grid">
         <form class="card grid" data-agent-form>
-          <h3>Gerar abordagem consultiva</h3>
-          <input class="input" name="company" placeholder="Empresa alvo, e.g. Clínica Soma" aria-label="Empresa alvo">
-          <input class="input" name="segment" placeholder="Segmento, e.g. clínicas odontológicas" aria-label="Segmento">
+          <div>
+            <p class="eyebrow">Briefing do agente</p>
+            <h3>Gerar abordagem consultiva</h3>
+          </div>
+          <input class="input" name="company" placeholder="Empresa alvo, e.g. Clinica Soma" aria-label="Empresa alvo">
+          <input class="input" name="segment" placeholder="Segmento, e.g. clinicas odontologicas" aria-label="Segmento">
           <input class="input" name="size" placeholder="Porte, e.g. 30 a 50 vidas" aria-label="Porte">
-          <select class="select" aria-label="Canal">
+          <select class="select" name="channel" aria-label="Canal">
             <option>WhatsApp</option>
-            <option>Instagram DM</option>
+            <option>Ligacao assistida</option>
             <option>Email comercial</option>
           </select>
-          <button class="btn btn--primary" type="submit">Gerar mensagem</button>
+          <textarea class="textarea" name="signal" placeholder="Sinal encontrado: abriu nova unidade, tem 32 colaboradores no LinkedIn, reclama de reajuste, contratando equipe..." aria-label="Sinal comercial"></textarea>
+          <button class="btn btn--primary" type="submit">Gerar abordagem</button>
         </form>
 
         <article class="card">
           <div class="toolbar" style="justify-content:space-between">
-            <h3 style="margin:0">Abordagem sugerida</h3>
-            <button class="btn" data-copy-agent>Copiar abordagem</button>
+            <div>
+              <p class="eyebrow">Mensagem sugerida</p>
+              <h3 style="margin:0">Primeiro toque</h3>
+            </div>
+            <button class="btn" data-copy-agent>Copiar</button>
           </div>
-          <p class="muted" data-agent-output style="font-size:18px;line-height:1.55;margin-top:18px">Olá, Clínica Soma. Notei que empresas de saúde com cerca de 30 a 50 vidas costumam perder tempo comparando rede credenciada, reajuste e coparticipação. Posso te enviar uma análise objetiva com 3 opções de plano empresarial ainda hoje?</p>
-          <div class="grid grid--3" style="margin-top:18px">
-            <div class="card metric"><strong>Alta</strong><span>intenção por segmento</span></div>
-            <div class="card metric"><strong>3</strong><span>provas para citar</span></div>
-            <div class="card metric"><strong>15m</strong><span>janela ideal de envio</span></div>
+          <p class="agent-output" data-agent-output>Ola, Clinica Soma. Vi que voces atendem empresas na regiao e parecem ter uma equipe em crescimento. Empresas de saude com 30 a 50 vidas costumam perder muito tempo comparando rede, reajuste e coparticipacao. Posso te enviar uma analise objetiva com 3 caminhos de plano empresarial?</p>
+          <div class="approval-panel">
+            <span class="status status--success">Seguro para revisar</span>
+            <span class="status status--info">Sem promessa comercial</span>
+            <span class="status status--warn">Checar opt-in antes do envio</span>
           </div>
         </article>
       </section>
 
       <section class="section section--tight">
-        <div class="grid grid--3">
-          <article class="agent-card is-active"><span class="pill">Google</span><h3>Busca local</h3><p class="muted">Empresas com sinais de expansão, vagas abertas ou mudança de sede.</p></article>
-          <article class="agent-card"><span class="pill">Instagram</span><h3>Sinal social</h3><p class="muted">Perfis com equipe, atendimento presencial e linguagem institucional.</p></article>
-          <article class="agent-card"><span class="pill">WhatsApp</span><h3>Follow-up</h3><p class="muted">Sequência curta com permissão, resumo e CTA de diagnóstico.</p></article>
+        <div class="outbound-board">
+          <article class="card">
+            <div class="toolbar" style="justify-content:space-between">
+              <h3 style="margin:0">Lista Google em triagem</h3>
+              <span class="pill">SP capital</span>
+            </div>
+            <div class="lead-list" style="margin-top:16px">
+              <div class="lead-row"><div><strong>Clinica Soma</strong><small>Google Business ativo · 32 vidas estimadas · telefone publico</small></div><span class="score">92</span></div>
+              <div class="lead-row"><div><strong>Logistica Vetta</strong><small>Nova filial · 72 vidas estimadas · site com RH</small></div><span class="score">84</span></div>
+              <div class="lead-row"><div><strong>Studio Atlas</strong><small>Equipe em expansao · primeira contratacao PJ provavel</small></div><span class="score">76</span></div>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="toolbar" style="justify-content:space-between">
+              <h3 style="margin:0">Sequencia WhatsApp</h3>
+              <span class="pill">3 toques</span>
+            </div>
+            <div class="sequence-list" style="margin-top:16px">
+              <div class="sequence-item"><strong>D0</strong><span>Contexto real + pergunta de permissao</span></div>
+              <div class="sequence-item"><strong>D2</strong><span>Resumo util: rede, reajuste, coparticipacao</span></div>
+              <div class="sequence-item"><strong>D5</strong><span>Encerramento elegante e opcao de sair</span></div>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="toolbar" style="justify-content:space-between">
+              <h3 style="margin:0">Guardrails</h3>
+              <span class="pill">LGPD</span>
+            </div>
+            <ul class="check-list">
+              <li>Registrar fonte publica e justificativa do contato.</li>
+              <li>Evitar disparo automatizado sem base legal ou aprovacao.</li>
+              <li>Parar sequencia ao receber negativa, silencio prolongado ou pedido de remocao.</li>
+              <li>Entregar ao corretor apenas oportunidades com contexto verificavel.</li>
+            </ul>
+          </article>
         </div>
       </section>
     </main>
   </div>
-  <script src="js/plano-certo.js"></script>
+  <script src="js_plano-certo.js"></script>
 </body>
 </html>

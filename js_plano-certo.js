@@ -53,7 +53,11 @@
       const company = $('[name="company"]', form).value || 'empresa-alvo';
       const segment = $('[name="segment"]', form).value || 'servicos';
       const size = $('[name="size"]', form).value || '50 vidas';
-      output.textContent = `Olá, ${company}. Notei que empresas de ${segment} com cerca de ${size} costumam perder tempo comparando rede credenciada, reajuste e coparticipação. Posso te enviar uma análise objetiva com 3 opções de plano empresarial ainda hoje?`;
+      const channel = $('[name="channel"]', form)?.value || 'WhatsApp';
+      const signal = $('[name="signal"]', form)?.value.trim();
+      const opener = channel === 'Ligacao assistida' ? 'Bom dia' : 'Ola';
+      const signalText = signal ? ` Vi este sinal publico: ${signal}.` : '';
+      output.textContent = `${opener}, ${company}.${signalText} Notei que empresas de ${segment} com cerca de ${size} costumam perder tempo comparando rede credenciada, reajuste e coparticipacao. Posso te enviar uma analise objetiva com 3 caminhos de plano empresarial?`;
     });
     copy?.addEventListener('click', async () => {
       try {
