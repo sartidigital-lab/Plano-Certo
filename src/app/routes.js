@@ -1,0 +1,29 @@
+import Dashboard from '../pages/Dashboard.jsx';
+import DesktopApp from '../pages/DesktopApp.jsx';
+import Home from '../pages/Home.jsx';
+import Inbox from '../pages/Inbox.jsx';
+import Landing from '../pages/Landing.jsx';
+import MobileAndroid from '../pages/MobileAndroid.jsx';
+import Outbound from '../pages/Outbound.jsx';
+import Pipeline from '../pages/Pipeline.jsx';
+import Widgets from '../pages/Widgets.jsx';
+
+export const routes = {
+  '/': Home,
+  '/landing': Landing,
+  '/dashboard': Dashboard,
+  '/inbox': Inbox,
+  '/outbound': Outbound,
+  '/pipeline': Pipeline,
+  '/mobile': MobileAndroid,
+  '/desktop': DesktopApp,
+  '/widgets': Widgets,
+};
+
+export function normalizePath(path) {
+  const clean = path.replace(/\.html$/, '');
+  if (clean === '/index') return '/';
+  if (clean === '/mobile-android') return '/mobile';
+  if (clean === '/desktop-app') return '/desktop';
+  return clean || '/';
+}
