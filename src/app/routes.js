@@ -4,6 +4,8 @@ import Home from '../pages/Home.jsx';
 import Inbox from '../pages/Inbox.jsx';
 import Landing from '../pages/Landing.jsx';
 import AnsBase from '../pages/AnsBase.jsx';
+import AssistedQuote from '../pages/AssistedQuote.jsx';
+import Lead360 from '../pages/Lead360.jsx';
 import PlanCatalog from '../pages/PlanCatalog.jsx';
 import PriceTables from '../pages/PriceTables.jsx';
 import MobileAndroid from '../pages/MobileAndroid.jsx';
@@ -18,6 +20,8 @@ export const routes = {
   '/inbox': Inbox,
   '/outbound': Outbound,
   '/pipeline': Pipeline,
+  '/lead-360': Lead360,
+  '/cotacao': AssistedQuote,
   '/catalogo': PlanCatalog,
   '/tabelas': PriceTables,
   '/ans': AnsBase,

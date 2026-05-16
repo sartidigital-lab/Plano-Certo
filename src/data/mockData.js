@@ -228,3 +228,69 @@ export const ansKnowledge = [
     excerpt: 'Catálogo comercial deve manter registro, segmentação, abrangência e situação do produto.',
   },
 ];
+
+export const leadProfiles = [
+  {
+    id: 'lead-clinica-soma',
+    company: 'Clinica Soma',
+    segment: 'Clínica médica',
+    city: 'São Paulo',
+    state: 'SP',
+    lives: 32,
+    origin: 'Google Business',
+    score: 92,
+    status: 'Quente',
+    currentProvider: 'NotreDame',
+    pain: 'Reajuste alto e necessidade de rede em Pinheiros e Osasco.',
+    contact: 'Marina Alves · financeiro',
+    phone: '+55 11 90000-1122',
+    nextAction: 'Enviar comparação com 3 opções PME e confirmar rede prioritária.',
+    timeline: [
+      ['Hoje 09:12', 'Agente outbound encontrou telefone público e sinal de crescimento.'],
+      ['Hoje 09:18', 'WhatsApp respondido: empresa quer rever plano atual.'],
+      ['Hoje 09:31', 'Agente qualificou vidas, região e dor principal.'],
+    ],
+    compatiblePlanIds: ['pc-amil-s250-sp', 'pc-unimed-facil-mg'],
+    ansDocIds: ['ans-coletivo-reajuste', 'ans-rol'],
+  },
+  {
+    id: 'lead-logistica-vetta',
+    company: 'Logistica Vetta',
+    segment: 'Logística',
+    city: 'Florianópolis',
+    state: 'SC',
+    lives: 72,
+    origin: 'Outbound',
+    score: 81,
+    status: 'Atenção',
+    currentProvider: 'Sem informação',
+    pain: 'Nova filial e provável necessidade de benefício para equipe operacional.',
+    contact: 'RH corporativo',
+    phone: '+55 48 90000-8810',
+    nextAction: 'Confirmar região de atendimento e quantidade de dependentes.',
+    timeline: [
+      ['Ontem 16:04', 'Empresa adicionada a partir de busca local.'],
+      ['Hoje 10:10', 'Primeiro toque aprovado, ainda sem resposta.'],
+    ],
+    compatiblePlanIds: ['pc-bradesco-efetivo-pr'],
+    ansDocIds: ['ans-registro-produto'],
+  },
+];
+
+export const quoteScenarios = [
+  {
+    id: 'quote-clinica-soma',
+    company: 'Clinica Soma',
+    region: 'SP capital',
+    lives: 32,
+    ageMix: [
+      ['00-18', 4],
+      ['19-23', 7],
+      ['24-28', 10],
+      ['29-33', 11],
+    ],
+    priorities: ['Rede oeste de SP', 'Reduzir reajuste', 'Coparticipação opcional'],
+    selectedPlanIds: ['pc-amil-s250-sp', 'pc-unimed-facil-mg'],
+    selectedTableIds: ['tab-amil-sp-2026-05'],
+  },
+];
