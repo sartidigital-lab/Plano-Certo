@@ -1,5 +1,6 @@
 import AppLink from '../components/navigation/AppLink.jsx';
 import Brand from '../components/navigation/Brand.jsx';
+import { getRuntimeDataMode } from '../services/dataModeService.js';
 
 const productNav = [
   ['Dashboard', '/dashboard', '42'],
@@ -16,6 +17,8 @@ const productNav = [
 ];
 
 export default function ProductShell({ path, navigate, children }) {
+  const dataMode = getRuntimeDataMode();
+
   return (
     <div className="app-layout">
       <aside className="sidebar">
@@ -29,7 +32,7 @@ export default function ProductShell({ path, navigate, children }) {
           ))}
         </nav>
         <div className="card sidebar-note">
-          <span className="pill">SLA</span>
+          <span className="pill">{dataMode.mode === 'supabase-configured' ? 'Supabase cfg' : 'Mock'}</span>
           <p className="muted">Prioridade para leads com mais de 70 pontos sem contato humano.</p>
         </div>
       </aside>
