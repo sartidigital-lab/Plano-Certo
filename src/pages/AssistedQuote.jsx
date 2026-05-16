@@ -1,16 +1,20 @@
 import { useMemo, useState } from 'react';
 import Metric from '../components/ui/Metric.jsx';
 import WorkspaceTop from '../components/workspace/WorkspaceTop.jsx';
-import { ansKnowledge, planCatalog, priceTables, quoteScenarios } from '../data/mockData.js';
+import { getPlansByIds, getPriceTableById, listPriceTables } from '../services/catalogService.js';
+import { listAnsKnowledge } from '../services/knowledgeService.js';
+import { getDefaultQuoteScenario } from '../services/quoteService.js';
 import ProductShell from '../layouts/ProductShell.jsx';
 
 const currencyFormatter = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
 
 export default function AssistedQuote({ path, navigate }) {
-  const scenario = quoteScenarios[0];
+  const scenario = getDefaultQuoteScenario();
+  const ansKnowledge = listAnsKnowledge();
+  const priceTables = listPriceTables();
   const [selectedTableId, setSelectedTableId] = useState(scenario.selectedTableIds[0]);
-  const selectedTable = priceTables.find((table) => table.id === selectedTableId) || priceTables[0];
-  const selectedPlans = planCatalog.filter((plan) => scenario.selectedPlanIds.includes(plan.id));
+  const selectedTable = getPriceTableById(selectedTableId);
+  const selectedPlans = getPlansByIds(scenario.selectedPlanIds);
 
   const quoteRows = useMemo(() => {
     return scenario.ageMix.map(([age, count]) => {

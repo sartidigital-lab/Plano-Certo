@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import WorkspaceTop from '../components/workspace/WorkspaceTop.jsx';
-import { conversations } from '../data/mockData.js';
+import { listConversations } from '../services/crmService.js';
 import ProductShell from '../layouts/ProductShell.jsx';
 
 export default function Inbox({ path, navigate }) {
+  const conversations = listConversations();
   const [messages, setMessages] = useState([
     ['lead', 'Bom dia. Temos 32 colaboradores e queremos rever o plano atual.'],
     ['agent', 'Perfeito. Vocês têm operadora atual e alguma preferência de hospitais na região?'],

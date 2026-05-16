@@ -1,23 +1,26 @@
 import { useMemo, useState } from 'react';
 import Metric from '../components/ui/Metric.jsx';
 import WorkspaceTop from '../components/workspace/WorkspaceTop.jsx';
-import { ansKnowledge, leadProfiles, planCatalog, priceTables } from '../data/mockData.js';
+import { getPlansByIds, getTablesForPlans } from '../services/catalogService.js';
+import { getLeadProfileById, listLeadProfiles } from '../services/crmService.js';
+import { getAnsKnowledgeByIds } from '../services/knowledgeService.js';
 import ProductShell from '../layouts/ProductShell.jsx';
 
 export default function Lead360({ path, navigate }) {
+  const leadProfiles = listLeadProfiles();
   const [activeId, setActiveId] = useState(leadProfiles[0].id);
-  const activeLead = leadProfiles.find((lead) => lead.id === activeId) || leadProfiles[0];
+  const activeLead = getLeadProfileById(activeId);
 
   const compatiblePlans = useMemo(
-    () => planCatalog.filter((plan) => activeLead.compatiblePlanIds.includes(plan.id)),
+    () => getPlansByIds(activeLead.compatiblePlanIds),
     [activeLead],
   );
   const ansAlerts = useMemo(
-    () => ansKnowledge.filter((doc) => activeLead.ansDocIds.includes(doc.id)),
+    () => getAnsKnowledgeByIds(activeLead.ansDocIds),
     [activeLead],
   );
   const applicableTables = useMemo(
-    () => priceTables.filter((table) => compatiblePlans.some((plan) => plan.product === table.product || plan.operator === table.operator)),
+    () => getTablesForPlans(compatiblePlans),
     [compatiblePlans],
   );
 

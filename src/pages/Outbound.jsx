@@ -2,12 +2,13 @@ import { useState } from 'react';
 import { GuardrailsCard, LeadTriageCard, SequenceCard } from '../components/outbound/OutboundCards.jsx';
 import Metric from '../components/ui/Metric.jsx';
 import WorkspaceTop from '../components/workspace/WorkspaceTop.jsx';
-import { outboundSteps } from '../data/mockData.js';
+import { listOutboundSteps } from '../services/agentService.js';
 import ProductShell from '../layouts/ProductShell.jsx';
 
 const defaultMessage = 'Ola, Clinica Soma. Vi que voces atendem empresas na regiao e parecem ter uma equipe em crescimento. Empresas de saude com 30 a 50 vidas costumam perder muito tempo comparando rede, reajuste e coparticipacao. Posso te enviar uma analise objetiva com 3 caminhos de plano empresarial?';
 
 export default function Outbound({ path, navigate }) {
+  const outboundSteps = listOutboundSteps();
   const [brief, setBrief] = useState({
     company: '',
     segment: '',

@@ -1,10 +1,11 @@
 import { useMemo, useState } from 'react';
 import Metric from '../components/ui/Metric.jsx';
 import WorkspaceTop from '../components/workspace/WorkspaceTop.jsx';
-import { planCatalog } from '../data/mockData.js';
+import { listPlanCatalog } from '../services/catalogService.js';
 import ProductShell from '../layouts/ProductShell.jsx';
 
 export default function PlanCatalog({ path, navigate }) {
+  const planCatalog = listPlanCatalog();
   const [query, setQuery] = useState('');
   const [activeId, setActiveId] = useState(planCatalog[0].id);
 

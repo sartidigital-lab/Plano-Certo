@@ -1,12 +1,15 @@
 import { useMemo, useState } from 'react';
 import Metric from '../components/ui/Metric.jsx';
 import WorkspaceTop from '../components/workspace/WorkspaceTop.jsx';
-import { agentProfiles, agentReviewQueue, agentRuns, voicePrinciples } from '../data/mockData.js';
+import { listAgentProfiles, listAgentReviewQueue, listAgentRuns, listVoicePrinciples } from '../services/agentService.js';
 import ProductShell from '../layouts/ProductShell.jsx';
 
 export default function AgentConsole({ path, navigate }) {
+  const agentProfiles = listAgentProfiles();
+  const agentRuns = listAgentRuns();
+  const voicePrinciples = listVoicePrinciples();
   const [activeAgentId, setActiveAgentId] = useState(agentProfiles[0].id);
-  const [reviews, setReviews] = useState(agentReviewQueue);
+  const [reviews, setReviews] = useState(listAgentReviewQueue());
   const activeAgent = useMemo(
     () => agentProfiles.find((agent) => agent.id === activeAgentId) || agentProfiles[0],
     [activeAgentId],

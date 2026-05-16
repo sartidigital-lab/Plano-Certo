@@ -1,10 +1,11 @@
 import { useMemo, useState } from 'react';
 import Metric from '../components/ui/Metric.jsx';
 import WorkspaceTop from '../components/workspace/WorkspaceTop.jsx';
-import { priceTables } from '../data/mockData.js';
+import { listPriceTables } from '../services/catalogService.js';
 import ProductShell from '../layouts/ProductShell.jsx';
 
 export default function PriceTables({ path, navigate }) {
+  const priceTables = listPriceTables();
   const [query, setQuery] = useState('');
   const [activeId, setActiveId] = useState(priceTables[0].id);
 

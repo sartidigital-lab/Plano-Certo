@@ -1,10 +1,11 @@
 import { useMemo, useState } from 'react';
 import Metric from '../components/ui/Metric.jsx';
 import WorkspaceTop from '../components/workspace/WorkspaceTop.jsx';
-import { ansKnowledge } from '../data/mockData.js';
+import { listAnsKnowledge } from '../services/knowledgeService.js';
 import ProductShell from '../layouts/ProductShell.jsx';
 
 export default function AnsBase({ path, navigate }) {
+  const ansKnowledge = listAnsKnowledge();
   const [query, setQuery] = useState('');
   const [activeId, setActiveId] = useState(ansKnowledge[0].id);
 

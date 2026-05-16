@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import WorkspaceTop from '../components/workspace/WorkspaceTop.jsx';
-import { pipelineColumns } from '../data/mockData.js';
+import { listPipelineColumns } from '../services/crmService.js';
 import ProductShell from '../layouts/ProductShell.jsx';
 
 export default function Pipeline({ path, navigate }) {
-  const [columns, setColumns] = useState(pipelineColumns);
+  const [columns, setColumns] = useState(listPipelineColumns());
   const [dragged, setDragged] = useState(null);
 
   function moveCard(targetColumnIndex) {

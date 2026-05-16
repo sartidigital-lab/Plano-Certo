@@ -2,10 +2,11 @@ import { useState } from 'react';
 import ChannelPerformance from '../components/charts/ChannelPerformance.jsx';
 import Metric from '../components/ui/Metric.jsx';
 import WorkspaceTop from '../components/workspace/WorkspaceTop.jsx';
-import { leads } from '../data/mockData.js';
+import { listLeads } from '../services/crmService.js';
 import ProductShell from '../layouts/ProductShell.jsx';
 
 export default function Dashboard({ path, navigate }) {
+  const leads = listLeads();
   const [filter, setFilter] = useState('');
   const [activeStatus, setActiveStatus] = useState('Quente');
   const visibleLeads = leads.filter((lead) => `${lead.company} ${lead.origin}`.toLowerCase().includes(filter.toLowerCase()));

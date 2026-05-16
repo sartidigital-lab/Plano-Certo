@@ -1,9 +1,10 @@
-import { launcherScreens } from '../data/mockData.js';
 import AppLink from '../components/navigation/AppLink.jsx';
 import ProductShot from '../components/product/ProductShot.jsx';
 import MarketingShell from '../layouts/MarketingShell.jsx';
+import { listLauncherScreens } from '../services/navigationService.js';
 
 export default function Home({ navigate }) {
+  const launcherScreens = listLauncherScreens();
   return (
     <MarketingShell navigate={navigate}>
       <main>
