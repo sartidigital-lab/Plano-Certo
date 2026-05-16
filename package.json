@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite --host 127.0.0.1 --configLoader runner",
     "build": "vite build --configLoader runner",
-    "preview": "vite preview --host 127.0.0.1 --configLoader runner"
+    "preview": "vite preview --host 127.0.0.1 --configLoader runner",
+    "supabase:check": "node scripts/check-supabase.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.105.4",

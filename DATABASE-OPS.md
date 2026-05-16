@@ -64,6 +64,17 @@ Critérios mínimos:
 - todas as tabelas públicas com RLS ativo.
 - índices `idx_*` criados para tabelas operacionais.
 
+Do frontend/local, também rodar:
+
+```bash
+npm run supabase:check
+```
+
+Interpretação:
+- `readable`: a tabela está exposta e legível com a chave configurada.
+- `protected by auth/RLS`: a tabela existe, mas exige usuário autenticado ou policy mais específica.
+- `missing or not exposed`: schema ainda não foi aplicado ou a tabela não está exposta pela Data API.
+
 ## Índices iniciais
 
 O schema já inclui índices para:
