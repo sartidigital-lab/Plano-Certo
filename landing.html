@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Plano Certo — venda planos empresariais com agentes</title>
+  <link rel="stylesheet" href="css/plano-certo.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar__inner">
+      <a class="brand" href="index.html"><span class="brand__mark">PC</span><span>Plano Certo</span></a>
+      <nav class="nav" aria-label="Principal">
+        <a href="#produto">Produto</a>
+        <a href="#canais">Canais</a>
+        <a href="#fluxo">Fluxo</a>
+      </nav>
+      <div class="actions">
+        <a class="btn" href="dashboard.html">Ver demo</a>
+        <a class="btn btn--primary" href="#contato">Falar com vendas</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero__grid">
+        <div>
+          <p class="eyebrow">Plano Certo para corretoras</p>
+          <h1>Mais leads empresariais qualificados, menos conversa perdida.</h1>
+          <p class="lede">Agentes de atendimento, vendas e prospecção outbound capturam empresas no Google, Instagram e WhatsApp, qualificam a intenção e entregam o lead certo para o corretor certo.</p>
+          <div class="actions">
+            <a class="btn btn--primary" href="#contato">Agendar apresentação</a>
+            <a class="btn" href="dashboard.html">Explorar produto</a>
+          </div>
+        </div>
+        <div class="product-shot" id="produto">
+          <div class="shot-bar">
+            <div class="dot-row"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+            lead qualificado em tempo real
+          </div>
+          <div style="padding:18px">
+            <div class="grid grid--2">
+              <div class="card metric"><strong>08:42</strong><span>tempo médio até primeiro contato do corretor</span></div>
+              <div class="card metric"><strong>92</strong><span>score da empresa Clínica Soma</span></div>
+            </div>
+            <div class="lead-list" style="margin-top:14px">
+              <div class="lead-row"><div><strong>Empresa com 32 vidas</strong><small>Quer comparar Amil, Bradesco e SulAmérica</small></div><span class="status status--success">Quente</span></div>
+              <div class="lead-row"><div><strong>Origem: Google</strong><small>Busca: plano de saúde empresarial SP</small></div><span class="status status--info">Alta intenção</span></div>
+              <div class="lead-row"><div><strong>Próxima ação</strong><small>Enviar simulação e agendar ligação</small></div><span class="status status--warn">15 min</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="canais">
+      <div class="container">
+        <div class="section__head">
+          <p class="eyebrow">Canais conectados</p>
+          <h2>O gestor enxerga origem, intenção e destino comercial em uma operação só.</h2>
+        </div>
+        <div class="grid grid--3">
+          <article class="card"><span class="pill">Google</span><h3>Captação por intenção</h3><p class="muted">Identifica buscas com sinal de compra e cria contexto para abordagem consultiva.</p></article>
+          <article class="card"><span class="pill">Instagram</span><h3>Triagem rápida</h3><p class="muted">Converte respostas de campanha em briefing comercial antes de acionar o corretor.</p></article>
+          <article class="card"><span class="pill">WhatsApp</span><h3>Repasse com histórico</h3><p class="muted">Entrega conversa, porte, urgência, região e objeções para acelerar o contato humano.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="fluxo">
+      <div class="container grid grid--2">
+        <div>
+          <p class="eyebrow">Fluxo operacional</p>
+          <h2>Da captura ao corretor sem perder contexto.</h2>
+          <p class="lede">A plataforma pontua empresas por porte, urgência, região, canal e aderência a plano empresarial. O gestor distribui os leads e acompanha execução até a proposta.</p>
+        </div>
+        <div class="card card--shadow">
+          <div class="lead-list">
+            <div class="lead-row"><div><strong>1. Capturar</strong><small>Empresa chega por Google, Instagram, WhatsApp ou lista outbound</small></div><span class="status status--info">Canal</span></div>
+            <div class="lead-row"><div><strong>2. Qualificar</strong><small>Agente coleta vidas, CNPJ, cidade, operadora atual e prazo</small></div><span class="status status--success">Score</span></div>
+            <div class="lead-row"><div><strong>3. Encaminhar</strong><small>Corretor recebe resumo, histórico e próxima melhor ação</small></div><span class="status status--warn">SLA</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--tight" id="contato">
+      <div class="container card card--shadow">
+        <div class="grid grid--2" style="align-items:center">
+          <div>
+            <p class="eyebrow">Pronto para avaliar</p>
+            <h2>Veja como sua corretora pode operar leads empresariais com agentes.</h2>
+          </div>
+          <form class="grid" onsubmit="event.preventDefault(); this.querySelector('button').textContent='Solicitação registrada';">
+            <input class="input" aria-label="Nome" placeholder="Nome do gestor">
+            <input class="input" aria-label="Email" type="email" placeholder="Email comercial">
+            <button class="btn btn--primary" type="submit">Solicitar apresentação</button>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Plano Certo — agente outbound</title>
+  <link rel="stylesheet" href="css/plano-certo.css">
+</head>
+<body class="app-shell">
+  <div class="app-layout">
+    <aside class="sidebar">
+      <a class="brand" href="index.html"><span class="brand__mark">PC</span><span>Plano Certo</span></a>
+      <nav class="side-nav" aria-label="Produto">
+        <a href="dashboard.html"><span>Dashboard</span><strong>42</strong></a>
+        <a href="inbox.html"><span>Inbox</span><strong>16</strong></a>
+        <a href="outbound.html" aria-current="page"><span>Outbound</span><strong>9</strong></a>
+        <a href="pipeline.html"><span>Pipeline</span><strong>31</strong></a>
+      </nav>
+    </aside>
+
+    <main class="workspace">
+      <div class="workspace__top">
+        <div class="workspace__title">
+          <p class="eyebrow">Prospecção B2B</p>
+          <h1>Agente outbound</h1>
+          <p class="muted">Monte uma abordagem para empresas encontradas no Google, Instagram ou lista interna.</p>
+        </div>
+      </div>
+
+      <section class="data-grid">
+        <form class="card grid" data-agent-form>
+          <h3>Gerar abordagem consultiva</h3>
+          <input class="input" name="company" placeholder="Empresa alvo, e.g. Clínica Soma" aria-label="Empresa alvo">
+          <input class="input" name="segment" placeholder="Segmento, e.g. clínicas odontológicas" aria-label="Segmento">
+          <input class="input" name="size" placeholder="Porte, e.g. 30 a 50 vidas" aria-label="Porte">
+          <select class="select" aria-label="Canal">
+            <option>WhatsApp</option>
+            <option>Instagram DM</option>
+            <option>Email comercial</option>
+          </select>
+          <button class="btn btn--primary" type="submit">Gerar mensagem</button>
+        </form>
+
+        <article class="card">
+          <div class="toolbar" style="justify-content:space-between">
+            <h3 style="margin:0">Abordagem sugerida</h3>
+            <button class="btn" data-copy-agent>Copiar abordagem</button>
+          </div>
+          <p class="muted" data-agent-output style="font-size:18px;line-height:1.55;margin-top:18px">Olá, Clínica Soma. Notei que empresas de saúde com cerca de 30 a 50 vidas costumam perder tempo comparando rede credenciada, reajuste e coparticipação. Posso te enviar uma análise objetiva com 3 opções de plano empresarial ainda hoje?</p>
+          <div class="grid grid--3" style="margin-top:18px">
+            <div class="card metric"><strong>Alta</strong><span>intenção por segmento</span></div>
+            <div class="card metric"><strong>3</strong><span>provas para citar</span></div>
+            <div class="card metric"><strong>15m</strong><span>janela ideal de envio</span></div>
+          </div>
+        </article>
+      </section>
+
+      <section class="section section--tight">
+        <div class="grid grid--3">
+          <article class="agent-card is-active"><span class="pill">Google</span><h3>Busca local</h3><p class="muted">Empresas com sinais de expansão, vagas abertas ou mudança de sede.</p></article>
+          <article class="agent-card"><span class="pill">Instagram</span><h3>Sinal social</h3><p class="muted">Perfis com equipe, atendimento presencial e linguagem institucional.</p></article>
+          <article class="agent-card"><span class="pill">WhatsApp</span><h3>Follow-up</h3><p class="muted">Sequência curta com permissão, resumo e CTA de diagnóstico.</p></article>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script src="js/plano-certo.js"></script>
+</body>
+</html>

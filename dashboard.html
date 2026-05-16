@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Plano Certo — dashboard do corretor</title>
+  <link rel="stylesheet" href="css/plano-certo.css">
+</head>
+<body class="app-shell">
+  <div class="app-layout">
+    <aside class="sidebar">
+      <a class="brand" href="index.html"><span class="brand__mark">PC</span><span>Plano Certo</span></a>
+      <nav class="side-nav" aria-label="Produto">
+        <a href="dashboard.html" aria-current="page"><span>Dashboard</span><strong>42</strong></a>
+        <a href="inbox.html"><span>Inbox</span><strong>16</strong></a>
+        <a href="outbound.html"><span>Outbound</span><strong>9</strong></a>
+        <a href="pipeline.html"><span>Pipeline</span><strong>31</strong></a>
+        <a href="widgets.html"><span>Widgets</span><strong>3</strong></a>
+      </nav>
+      <div class="card" style="margin-top:auto">
+        <span class="pill">SLA</span>
+        <p style="margin:12px 0 0" class="muted">Prioridade para leads com mais de 70 pontos sem contato humano.</p>
+      </div>
+    </aside>
+
+    <main class="workspace">
+      <div class="workspace__top">
+        <div class="workspace__title">
+          <p class="eyebrow">Operação de hoje</p>
+          <h1>Dashboard do corretor</h1>
+          <p class="muted">Leads empresariais capturados, qualificados e prontos para repasse.</p>
+        </div>
+        <div class="toolbar">
+          <input class="input" data-lead-filter placeholder="Filtrar empresa, origem ou cidade" aria-label="Filtrar leads">
+          <button class="btn btn--primary">Distribuir próximos 5</button>
+        </div>
+      </div>
+
+      <section class="kpi-row" aria-label="Indicadores">
+        <article class="card metric"><strong>42</strong><span>empresas qualificadas</span></article>
+        <article class="card metric"><strong>18</strong><span>repasses para corretor</span></article>
+        <article class="card metric"><strong>27%</strong><span>com reunião agendada</span></article>
+        <article class="card metric"><strong>11m</strong><span>SLA médio de contato</span></article>
+      </section>
+
+      <section class="data-grid">
+        <div class="table-card">
+          <div class="table-scroll">
+            <div class="table-header"><span>Empresa</span><span>Origem</span><span>Vidas</span><span>Status</span><span>Score</span></div>
+            <div class="table-row" data-lead-row><strong>Clínica Soma</strong><span>Google · SP</span><span>32</span><span id="status-1" class="status status--success">Quente</span><span class="score">92</span></div>
+            <div class="table-row" data-lead-row><strong>Ferrovia Norte</strong><span>Outbound · PR</span><span>118</span><span class="status status--warn">Atenção</span><span class="score">87</span></div>
+            <div class="table-row" data-lead-row><strong>Studio Atlas</strong><span>Instagram · RJ</span><span>14</span><span class="status status--info">Nutrir</span><span class="score">74</span></div>
+            <div class="table-row" data-lead-row><strong>Grupo Kairós</strong><span>WhatsApp · MG</span><span>46</span><span class="status status--success">Quente</span><span class="score">89</span></div>
+            <div class="table-row" data-lead-row><strong>Logística Vetta</strong><span>Google · SC</span><span>72</span><span class="status status--warn">Atenção</span><span class="score">81</span></div>
+          </div>
+        </div>
+
+        <aside class="grid">
+          <article class="card">
+            <div class="toolbar" style="justify-content:space-between">
+              <h3 style="margin:0">Performance por canal</h3>
+              <span class="pill">7 dias</span>
+            </div>
+            <div class="chart" aria-label="Gráfico de barras por canal">
+              <span class="bar" style="height:45%"></span>
+              <span class="bar" style="height:78%"></span>
+              <span class="bar" style="height:58%"></span>
+              <span class="bar" style="height:92%"></span>
+              <span class="bar" style="height:67%"></span>
+              <span class="bar" style="height:84%"></span>
+            </div>
+            <p class="muted" style="margin:12px 0 0">Google traz maior intenção; WhatsApp converte melhor quando o corretor responde até 15 minutos.</p>
+          </article>
+          <article class="card">
+            <h3>Ajustar status do lead ativo</h3>
+            <select class="select" data-status-select="status-1" aria-label="Alterar status">
+              <option>Quente</option>
+              <option>Atenção</option>
+              <option>Nutrir</option>
+            </select>
+          </article>
+        </aside>
+      </section>
+    </main>
+  </div>
+  <script src="js/plano-certo.js"></script>
+</body>
+</html>

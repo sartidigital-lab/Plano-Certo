@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Plano Certo — inbox de leads</title>
+  <link rel="stylesheet" href="css/plano-certo.css">
+</head>
+<body class="app-shell">
+  <div class="app-layout">
+    <aside class="sidebar">
+      <a class="brand" href="index.html"><span class="brand__mark">PC</span><span>Plano Certo</span></a>
+      <nav class="side-nav" aria-label="Produto">
+        <a href="dashboard.html"><span>Dashboard</span><strong>42</strong></a>
+        <a href="inbox.html" aria-current="page"><span>Inbox</span><strong>16</strong></a>
+        <a href="outbound.html"><span>Outbound</span><strong>9</strong></a>
+        <a href="pipeline.html"><span>Pipeline</span><strong>31</strong></a>
+      </nav>
+    </aside>
+
+    <main class="workspace">
+      <div class="workspace__top">
+        <div class="workspace__title">
+          <p class="eyebrow">Atendimento multiagente</p>
+          <h1>Inbox de leads</h1>
+          <p class="muted">Conversas de WhatsApp, Instagram e Google com resumo e próxima ação.</p>
+        </div>
+        <div class="toolbar">
+          <select class="select" aria-label="Canal"><option>Todos os canais</option><option>WhatsApp</option><option>Instagram</option><option>Google</option></select>
+          <button class="btn btn--primary">Assumir conversa</button>
+        </div>
+      </div>
+
+      <section class="split">
+        <aside class="list-panel" aria-label="Conversas">
+          <article class="message-card is-active">
+            <div class="toolbar" style="justify-content:space-between"><strong>Clínica Soma</strong><span class="status status--success">92</span></div>
+            <p class="muted">WhatsApp · quer cotar 32 vidas até sexta.</p>
+          </article>
+          <article class="message-card">
+            <div class="toolbar" style="justify-content:space-between"><strong>Logística Vetta</strong><span class="status status--warn">81</span></div>
+            <p class="muted">Google · comparando rede credenciada.</p>
+          </article>
+          <article class="message-card">
+            <div class="toolbar" style="justify-content:space-between"><strong>Studio Atlas</strong><span class="status status--info">74</span></div>
+            <p class="muted">Instagram · primeira contratação PJ.</p>
+          </article>
+        </aside>
+
+        <article class="card">
+          <div class="toolbar" style="justify-content:space-between">
+            <div><h3 style="margin:0">Clínica Soma</h3><p class="muted" style="margin:4px 0 0">32 vidas · São Paulo · decisor financeiro</p></div>
+            <span class="pill">Agente: qualificação</span>
+          </div>
+          <div class="conversation" data-message-stream style="margin-top:22px;max-height:460px;overflow:auto">
+            <div class="bubble">Bom dia. Temos 32 colaboradores e queremos rever o plano atual.</div>
+            <div class="bubble bubble--agent">Perfeito. Vocês têm operadora atual e alguma preferência de hospitais na região?</div>
+            <div class="bubble">Hoje usamos Notredame, mas o reajuste veio alto. Precisamos de rede em Pinheiros e Osasco.</div>
+            <div class="bubble bubble--agent">Entendi. Vou encaminhar para um corretor com experiência em PME e rede oeste de SP.</div>
+          </div>
+          <form class="composer" data-message-form>
+            <input class="input" data-message-input placeholder="Responder com contexto do agente" aria-label="Mensagem">
+            <button class="btn btn--primary" type="submit">Enviar</button>
+          </form>
+        </article>
+      </section>
+    </main>
+  </div>
+  <script src="js/plano-certo.js"></script>
+</body>
+</html>
