@@ -16,6 +16,7 @@ import Widgets from '../pages/Widgets.jsx';
 
 export const routes = {
   '/': Home,
+  '/login': Home,
   '/landing': Landing,
   '/dashboard': Dashboard,
   '/inbox': Inbox,
