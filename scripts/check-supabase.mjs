@@ -15,6 +15,7 @@ if (!url || !key) {
 }
 
 const tables = [
+  'leads',
   'health_plans',
   'price_tables',
   'ans_documents',
