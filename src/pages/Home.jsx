@@ -1,22 +1,35 @@
 import { useState } from 'react';
-import AppLink from '../components/navigation/AppLink.jsx';
 import Brand from '../components/navigation/Brand.jsx';
+import { createDemoSession, signInWithEmail } from '../services/authService.js';
 import { getRuntimeDataMode } from '../services/dataModeService.js';
 
-export default function Home({ navigate }) {
+export default function Home({ navigate, onSessionChange }) {
   const dataMode = getRuntimeDataMode();
-  const [email, setEmail] = useState('operacao@planocerto.com.br');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [remember, setRemember] = useState(true);
+  const [status, setStatus] = useState('idle');
+  const [message, setMessage] = useState('');
 
-  function enterWorkspace(event) {
+  async function enterWorkspace(event) {
     event.preventDefault();
-    window.localStorage.setItem('plano-certo-session', JSON.stringify({
-      email,
-      remember,
-      signedInAt: new Date().toISOString(),
-    }));
-    navigate('/dashboard');
+    setStatus('loading');
+    setMessage('');
+
+    try {
+      const nextSession = await signInWithEmail(email, password);
+      onSessionChange?.(nextSession);
+      navigate('/dashboard');
+    } catch (error) {
+      setStatus('error');
+      setMessage(formatAuthError(error));
+    }
+  }
+
+  function enterDemo(nextPath = '/dashboard') {
+    const nextSession = createDemoSession(email || 'operacao@planocerto.com.br', remember);
+    onSessionChange?.(nextSession);
+    navigate(nextPath);
   }
 
   return (
@@ -45,17 +58,17 @@ export default function Home({ navigate }) {
             <div>
               <p className="eyebrow">Acesso</p>
               <h2>Plano Certo</h2>
-              <p className="muted">Use o acesso demo para entrar no workspace enquanto a autenticacao final e configurada.</p>
+              <p className="muted">Entre com a conta da corretora ou use o modo demo enquanto os usuarios finais sao provisionados.</p>
             </div>
 
             <label className="field">
               <span>Email</span>
-              <input className="input" type="email" value={email} onChange={(event) => setEmail(event.target.value)} autoComplete="email" />
+              <input className="input" type="email" value={email} onChange={(event) => setEmail(event.target.value)} autoComplete="email" placeholder="voce@corretora.com.br" required />
             </label>
 
             <label className="field">
               <span>Senha</span>
-              <input className="input" type="password" value={password} onChange={(event) => setPassword(event.target.value)} autoComplete="current-password" placeholder="Acesso demo" />
+              <input className="input" type="password" value={password} onChange={(event) => setPassword(event.target.value)} autoComplete="current-password" placeholder="Sua senha" required />
             </label>
 
             <label className="check-control">
@@ -63,16 +76,32 @@ export default function Home({ navigate }) {
               <span>Manter este dispositivo conectado</span>
             </label>
 
-            <button className="btn btn--primary login-submit" type="submit">Entrar no dashboard</button>
+            {message && <p className="form-message" role="alert">{message}</p>}
+
+            <button className="btn btn--primary login-submit" type="submit" disabled={status === 'loading'}>
+              {status === 'loading' ? 'Entrando...' : 'Entrar no dashboard'}
+            </button>
+            <button className="btn login-submit" type="button" onClick={() => enterDemo()}>Usar modo demo</button>
 
             <div className="login-shortcuts" aria-label="Atalhos do produto">
-              <AppLink to="/agentes" navigate={navigate}>Agentes</AppLink>
-              <AppLink to="/catalogo" navigate={navigate}>Catalogo</AppLink>
-              <AppLink to="/ans" navigate={navigate}>Base ANS</AppLink>
+              <button type="button" onClick={() => enterDemo('/agentes')}>Agentes</button>
+              <button type="button" onClick={() => enterDemo('/catalogo')}>Catalogo</button>
+              <button type="button" onClick={() => enterDemo('/ans')}>Base ANS</button>
             </div>
           </form>
         </div>
       </section>
     </main>
   );
+}
+
+function formatAuthError(error) {
+  const message = error?.message || '';
+  if (message.toLowerCase().includes('failed to fetch')) {
+    return 'Nao foi possivel conectar ao Supabase Auth agora. Use o modo demo ou tente novamente em instantes.';
+  }
+  if (message.toLowerCase().includes('invalid login credentials')) {
+    return 'Email ou senha invalidos. Confira os dados ou use o modo demo.';
+  }
+  return 'Nao foi possivel entrar. Confira email e senha ou use o modo demo.';
 }

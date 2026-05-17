@@ -1,5 +1,6 @@
 import AppLink from '../components/navigation/AppLink.jsx';
 import Brand from '../components/navigation/Brand.jsx';
+import { signOutSession } from '../services/authService.js';
 import { getRuntimeDataMode } from '../services/dataModeService.js';
 
 const productNav = [
@@ -19,6 +20,11 @@ const productNav = [
 export default function ProductShell({ path, navigate, children }) {
   const dataMode = getRuntimeDataMode();
 
+  async function handleSignOut() {
+    await signOutSession();
+    navigate('/login');
+  }
+
   return (
     <div className="app-layout">
       <aside className="sidebar">
@@ -34,6 +40,7 @@ export default function ProductShell({ path, navigate, children }) {
         <div className="card sidebar-note">
           <span className="pill">{dataMode.mode === 'supabase-configured' ? 'Supabase cfg' : 'Mock'}</span>
           <p className="muted">Prioridade para leads com mais de 70 pontos sem contato humano.</p>
+          <button className="btn sidebar-signout" type="button" onClick={handleSignOut}>Sair</button>
         </div>
       </aside>
       <main className="workspace">{children}</main>
