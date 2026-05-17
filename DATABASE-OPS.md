@@ -28,6 +28,12 @@ Manter o banco preparado para crescer de protótipo para CRM operacional com age
 - Manter fallback mock enquanto o banco amadurece.
 - Validar cada carga com `supabase/verification.sql` antes de apontar Vercel para o projeto real.
 
+Status em 2026-05-16:
+- Projeto Supabase ativo: `Plano Certo` (`errbmfumiixmyjiltdtq`).
+- `.env.local` local aponta para `https://errbmfumiixmyjiltdtq.supabase.co`.
+- Leitura real validada para catálogo, tabelas de preço, Base ANS e agentes.
+- Relações usadas pelo frontend validadas: `operators`, `administrators`, `price_table_rows`, `agent_skills` e `agent_guardrails`.
+
 ### Fase 3 - Operação CRM
 - Persistir leads, conversas, mensagens, oportunidades e aprovações.
 - Introduzir autenticação e escopo por corretora/equipe.
@@ -89,8 +95,16 @@ O schema já inclui índices para:
 
 Estado atual:
 - RLS habilitado em todas as tabelas públicas.
-- Policies iniciais liberam acesso para `authenticated`.
-- Nenhuma policy foi criada para `anon`.
+- Policies iniciais liberam leitura para `anon` nas tabelas de baixo risco usadas pelo frontend público.
+- Policies iniciais liberam gerenciamento para `authenticated` nessas mesmas tabelas.
+- Tabelas operacionais existentes no projeto (`tenants`, `leads`, `messages`, campanhas e filas) não foram substituídas.
+
+Variáveis necessárias no deploy:
+
+```bash
+VITE_SUPABASE_URL=https://errbmfumiixmyjiltdtq.supabase.co
+VITE_SUPABASE_PUBLISHABLE_KEY=<publishable key ativa do projeto Plano Certo>
+```
 
 Próxima evolução:
 - Criar `organizations`.

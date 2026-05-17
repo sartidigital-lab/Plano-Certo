@@ -60,3 +60,21 @@ insert into public.agent_profiles (id, name, role, status, autonomy_level, tone_
   ('00000000-0000-0000-0000-000000000603', 'Agente de cotação', 'Cruza região, vidas, catálogo e tabelas para preparar cenários.', 'review', 'low', 'Preciso, transparente e sem exagero comercial', 84),
   ('00000000-0000-0000-0000-000000000604', 'Agente compliance ANS', 'Revisa mensagens sobre cobertura, carência, reajuste e registro.', 'active', 'high_review', 'Técnico, claro e seguro', 86)
 on conflict (id) do update set name = excluded.name, status = excluded.status, humanization_score = excluded.humanization_score;
+
+insert into public.agent_skills (agent_id, skill_name, description, enabled) values
+  ('00000000-0000-0000-0000-000000000601', 'Triagem inicial', 'Coleta contexto e identifica necessidade do lead.', true),
+  ('00000000-0000-0000-0000-000000000602', 'Prospeccao outbound', 'Pesquisa empresas e prepara abordagem consultiva.', true),
+  ('00000000-0000-0000-0000-000000000603', 'Cotacao assistida', 'Cruza planos, regiao e faixa de vidas.', true),
+  ('00000000-0000-0000-0000-000000000604', 'Revisao ANS', 'Verifica pontos regulatorios antes de resposta.', true)
+on conflict (agent_id, skill_name) do update
+set description = excluded.description,
+    enabled = excluded.enabled;
+
+insert into public.agent_guardrails (agent_id, rule_text, severity, action) values
+  ('00000000-0000-0000-0000-000000000601', 'Nao prometer cobertura ou preco sem base validada.', 'high', 'require_approval'),
+  ('00000000-0000-0000-0000-000000000602', 'Respeitar opt-out e evitar insistencia apos recusa.', 'high', 'block'),
+  ('00000000-0000-0000-0000-000000000603', 'Sinalizar divergencia entre tabela e elegibilidade.', 'medium', 'require_approval'),
+  ('00000000-0000-0000-0000-000000000604', 'Encaminhar temas regulatorios sensiveis para revisao humana.', 'high', 'require_approval')
+on conflict (agent_id, rule_text) do update
+set severity = excluded.severity,
+    action = excluded.action;

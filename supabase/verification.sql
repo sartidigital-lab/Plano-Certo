@@ -7,7 +7,9 @@ union all select 'health_plans', count(*) from public.health_plans
 union all select 'price_tables', count(*) from public.price_tables
 union all select 'price_table_rows', count(*) from public.price_table_rows
 union all select 'ans_documents', count(*) from public.ans_documents
-union all select 'agent_profiles', count(*) from public.agent_profiles;
+union all select 'agent_profiles', count(*) from public.agent_profiles
+union all select 'agent_skills', count(*) from public.agent_skills
+union all select 'agent_guardrails', count(*) from public.agent_guardrails;
 
 select
   pt.id,
