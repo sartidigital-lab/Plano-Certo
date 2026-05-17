@@ -6,8 +6,6 @@ import { listAnsKnowledge } from '../services/knowledgeService.js';
 import { getDefaultQuoteScenario } from '../services/quoteService.js';
 import ProductShell from '../layouts/ProductShell.jsx';
 
-const currencyFormatter = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
-
 export default function AssistedQuote({ path, navigate }) {
   const scenario = getDefaultQuoteScenario();
   const ansKnowledge = listAnsKnowledge();
@@ -15,52 +13,39 @@ export default function AssistedQuote({ path, navigate }) {
   const [selectedTableId, setSelectedTableId] = useState(scenario.selectedTableIds[0]);
   const selectedTable = getPriceTableById(selectedTableId);
   const selectedPlans = getPlansByIds(scenario.selectedPlanIds);
-
-  const quoteRows = useMemo(() => {
-    return scenario.ageMix.map(([age, count]) => {
-      const priceRow = selectedTable.rows.find(([tableAge]) => tableAge === age) || selectedTable.rows[0];
-      const wardValue = parseCurrency(priceRow[1]);
-      const apartmentValue = parseCurrency(priceRow[2]);
-      return {
-        age,
-        count,
-        ward: wardValue,
-        apartment: apartmentValue,
-        wardTotal: wardValue * count,
-        apartmentTotal: apartmentValue * count,
-      };
-    });
-  }, [scenario.ageMix, selectedTable]);
-
-  const wardTotal = quoteRows.reduce((sum, row) => sum + row.wardTotal, 0);
-  const apartmentTotal = quoteRows.reduce((sum, row) => sum + row.apartmentTotal, 0);
+  const pendingQuestions = useMemo(() => [
+    'Confirmar UF/regiao exata de contratacao e abrangencia desejada.',
+    'Validar quantidade de vidas, dependentes e faixa etaria predominante.',
+    'Checar operadora atual, reajuste recebido e rede indispensavel.',
+    'Confirmar tabela vigente com o corretor antes de falar em preco.',
+  ], []);
 
   return (
     <ProductShell path={path} navigate={navigate}>
       <WorkspaceTop
-        eyebrow="Cotação assistida"
-        title="Cotação PME"
-        subtitle="Simule valores com tabela vigente, mix de vidas, planos compatíveis e alertas de compliance."
+        eyebrow="Triagem assistida"
+        title="Handoff para corretor"
+        subtitle="Classifique o lead, organize contexto e gere um resumo seguro para o corretor confirmar tabela, operadora e regiao."
         actions={[
-          <select key="table" className="select" value={selectedTableId} onChange={(event) => setSelectedTableId(event.target.value)} aria-label="Selecionar tabela">
+          <select key="table" className="select" value={selectedTableId} onChange={(event) => setSelectedTableId(event.target.value)} aria-label="Selecionar referencia interna">
             {priceTables.map((table) => <option key={table.id} value={table.id}>{table.product} · {table.region}</option>)}
           </select>,
-          <button key="proposal" className="btn btn--primary">Gerar resumo</button>,
+          <button key="handoff" className="btn btn--primary">Encaminhar para corretor</button>,
         ]}
       />
 
       <section className="kpi-row">
-        <Metric value={scenario.lives} label="vidas cotadas" />
-        <Metric value={currencyFormatter.format(wardTotal)} label="total enfermaria" />
-        <Metric value={currencyFormatter.format(apartmentTotal)} label="total apartamento" />
-        <Metric value={selectedPlans.length} label="planos comparados" />
+        <Metric value={scenario.lives} label="vidas estimadas" />
+        <Metric value={scenario.region} label="regiao informada" />
+        <Metric value={selectedPlans.length} label="caminhos possiveis" />
+        <Metric value="Humano" label="confirmacao de tabela" />
       </section>
 
       <section className="quote-layout">
         <article className="card">
           <div className="toolbar toolbar-between">
             <div>
-              <p className="eyebrow">Empresa</p>
+              <p className="eyebrow">Lead classificado</p>
               <h3 className="flush">{scenario.company}</h3>
             </div>
             <span className="pill">{scenario.region}</span>
@@ -68,39 +53,36 @@ export default function AssistedQuote({ path, navigate }) {
           <div className="priority-list">
             {scenario.priorities.map((priority) => <span key={priority} className="status status--info">{priority}</span>)}
           </div>
-          <div className="quote-table">
-            <div className="quote-head"><span>Faixa</span><span>Vidas</span><span>Enfermaria</span><span>Apartamento</span></div>
-            {quoteRows.map((row) => (
-              <div key={row.age} className="quote-row">
-                <strong>{row.age}</strong>
-                <span>{row.count}</span>
-                <span>{currencyFormatter.format(row.wardTotal)}</span>
-                <span>{currencyFormatter.format(row.apartmentTotal)}</span>
-              </div>
-            ))}
+          <div className="citation-box">
+            <strong>Resumo para o corretor</strong>
+            <p>Empresa com {scenario.lives} vidas estimadas em {scenario.region}. Lead deve ser conduzido por corretor humano para confirmar operadoras disponiveis, tabela vigente por regiao, rede desejada e premissas antes de proposta.</p>
           </div>
         </article>
 
         <aside className="detail-panel">
           <div className="toolbar toolbar-between">
             <div>
-              <p className="eyebrow">Tabela usada</p>
+              <p className="eyebrow">Referencia interna</p>
               <h3 className="flush">{selectedTable.product}</h3>
             </div>
-            <span className={`status ${selectedTable.status === 'Vigente' ? 'status--success' : 'status--warn'}`}>{selectedTable.status}</span>
+            <span className="status status--warn">Confirmar</span>
           </div>
           <dl className="detail-list">
             <div><dt>Operadora</dt><dd>{selectedTable.operator}</dd></div>
             <div><dt>Administradora</dt><dd>{selectedTable.administrator}</dd></div>
-            <div><dt>Vigência</dt><dd>{selectedTable.validity}</dd></div>
+            <div><dt>Regiao</dt><dd>{selectedTable.region}</dd></div>
             <div><dt>Origem</dt><dd>{selectedTable.source}</dd></div>
           </dl>
+          <div className="agent-readiness">
+            <span className="status status--warn">Nao enviar preco automatico</span>
+            <span className="status status--info">Corretor valida tabela</span>
+          </div>
         </aside>
 
         <article className="card quote-wide">
           <div className="toolbar toolbar-between">
-            <h3 className="flush">Comparação comercial</h3>
-            <span className="pill">Assistente</span>
+            <h3 className="flush">Caminhos possiveis de atendimento</h3>
+            <span className="pill">Sem promessa de preco</span>
           </div>
           <div className="mini-card-grid">
             {selectedPlans.map((plan) => (
@@ -113,10 +95,20 @@ export default function AssistedQuote({ path, navigate }) {
           </div>
         </article>
 
-        <article className="card quote-wide">
+        <article className="card">
           <div className="toolbar toolbar-between">
-            <h3 className="flush">Regras para o agente</h3>
-            <span className="pill">ANS + comercial</span>
+            <h3 className="flush">Perguntas pendentes</h3>
+            <span className="pill">Antes da proposta</span>
+          </div>
+          <ul className="check-list">
+            {pendingQuestions.map((question) => <li key={question}>{question}</li>)}
+          </ul>
+        </article>
+
+        <article className="card">
+          <div className="toolbar toolbar-between">
+            <h3 className="flush">Cuidados ANS</h3>
+            <span className="pill">Compliance</span>
           </div>
           <div className="stack-list">
             {ansKnowledge.slice(0, 3).map((doc) => (
@@ -130,8 +122,4 @@ export default function AssistedQuote({ path, navigate }) {
       </section>
     </ProductShell>
   );
-}
-
-function parseCurrency(value) {
-  return Number(value.replace('R$', '').replace(/\./g, '').replace(',', '.').trim());
 }

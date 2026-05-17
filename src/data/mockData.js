@@ -7,7 +7,7 @@ export const leads = [
 ];
 
 export const conversations = [
-  { company: 'Clinica Soma', channel: 'WhatsApp', summary: 'quer cotar 32 vidas ate sexta.', score: 92, status: 'success' },
+  { company: 'Clinica Soma', channel: 'WhatsApp', summary: 'precisa de retorno para 32 vidas ate sexta.', score: 92, status: 'success' },
   { company: 'Logistica Vetta', channel: 'Google', summary: 'comparando rede credenciada.', score: 81, status: 'warn' },
   { company: 'Studio Atlas', channel: 'Instagram', summary: 'primeira contratacao PJ.', score: 74, status: 'info' },
 ];
@@ -22,7 +22,7 @@ export const pipelineColumns = [
     ],
   },
   {
-    title: 'Em cotação',
+    title: 'Com corretor',
     meta: '5 empresas',
     cards: [
       { company: 'Clinica Soma', note: '32 vidas · rede Pinheiros e Osasco', status: 'Prioridade', tone: 'success' },
@@ -52,7 +52,7 @@ export const launcherScreens = [
   ['Agente outbound', '/outbound', 'Pesquisa de empresas e geração de abordagem.'],
   ['Pipeline de vendas', '/pipeline', 'Etapas do lead ao repasse.'],
   ['Catálogo de planos', '/catalogo', 'Produtos, rede, elegibilidade e regras comerciais.'],
-  ['Tabelas de preço', '/tabelas', 'Vigências, regiões, faixas e valores versionados.'],
+  ['Referencias comerciais', '/tabelas', 'Vigencias e regioes para conferencia humana.'],
   ['Base ANS', '/ans', 'Normas e documentos para resposta com fonte.'],
   ['Android', '/mobile', 'Operação compacta para o corretor em campo.'],
   ['Desktop app', '/desktop', 'Console denso para gestor de corretora.'],

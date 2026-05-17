@@ -21,26 +21,26 @@ export default function PriceTables({ path, navigate }) {
   return (
     <ProductShell path={path} navigate={navigate}>
       <WorkspaceTop
-        eyebrow="Comercial versionado"
-        title="Tabelas de preço"
-        subtitle="Vigências, regiões, faixas etárias e valores usados por cotação e agentes de venda."
+        eyebrow="Referencia interna"
+        title="Tabelas em validacao"
+        subtitle="Base de apoio para o corretor conferir vigencia, regiao e origem antes de informar qualquer valor."
         actions={[
-          <input key="search" className="input" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Buscar produto, região ou administradora" aria-label="Buscar tabelas" />,
-          <button key="upload" className="btn btn--primary">Importar tabela</button>,
+          <input key="search" className="input" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Buscar produto, regiao ou administradora" aria-label="Buscar referencias" />,
+          <button key="upload" className="btn btn--primary">Adicionar referencia</button>,
         ]}
       />
 
       <section className="kpi-row">
-        <Metric value={priceTables.length} label="tabelas carregadas" />
-        <Metric value="2" label="vigentes" />
-        <Metric value="1" label="aguardando revisão" />
-        <Metric value="0" label="erros críticos" />
+        <Metric value={priceTables.length} label="referencias carregadas" />
+        <Metric value="2" label="possivelmente vigentes" />
+        <Metric value="1" label="aguardando revisao" />
+        <Metric value="Humano" label="confirmacao final" />
       </section>
 
       <section className="catalog-layout">
         <div className="table-card">
           <div className="table-scroll">
-            <div className="price-header"><span>Tabela</span><span>Região</span><span>Vigência</span><span>Vidas</span><span>Status</span></div>
+            <div className="price-header"><span>Referencia</span><span>Regiao</span><span>Vigencia</span><span>Vidas</span><span>Status</span></div>
             {filteredTables.map((table) => (
               <button key={table.id} className={`price-row ${table.id === activeTable.id ? 'is-active' : ''}`} onClick={() => setActiveId(table.id)}>
                 <strong>{table.product}</strong>
@@ -56,7 +56,7 @@ export default function PriceTables({ path, navigate }) {
         <aside className="detail-panel">
           <div className="toolbar toolbar-between">
             <div>
-              <p className="eyebrow">Tabela ativa</p>
+              <p className="eyebrow">Referencia selecionada</p>
               <h3 className="flush">{activeTable.product}</h3>
             </div>
             <span className="pill">{status === 'loading' ? 'Carregando' : activeTable.region}</span>
@@ -65,17 +65,17 @@ export default function PriceTables({ path, navigate }) {
             <div><dt>Operadora</dt><dd>{activeTable.operator}</dd></div>
             <div><dt>Administradora</dt><dd>{activeTable.administrator}</dd></div>
             <div><dt>Origem</dt><dd>{activeTable.source}</dd></div>
-            <div><dt>Atualização</dt><dd>{activeTable.updatedAt}</dd></div>
+            <div><dt>Atualizacao</dt><dd>{activeTable.updatedAt}</dd></div>
           </dl>
-          <div className="mini-price-table">
+          <div className="mini-price-table" aria-label="Valores apenas para conferencia interna">
             <div className="mini-price-head"><span>Faixa</span><span>Enfermaria</span><span>Apartamento</span></div>
             {activeTable.rows.map(([age, ward, apartment]) => (
               <div key={age} className="mini-price-row"><strong>{age}</strong><span>{ward}</span><span>{apartment}</span></div>
             ))}
           </div>
           <div className="agent-readiness">
-            <span className="status status--success">Cotável pelo agente</span>
-            <span className="status status--info">Requer produto compatível</span>
+            <span className="status status--warn">Nao enviar automatico</span>
+            <span className="status status--info">Corretor confirma por regiao</span>
           </div>
         </aside>
       </section>

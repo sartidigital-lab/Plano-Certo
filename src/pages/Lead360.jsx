@@ -27,21 +27,21 @@ export default function Lead360({ path, navigate }) {
   return (
     <ProductShell path={path} navigate={navigate}>
       <WorkspaceTop
-        eyebrow="Visão CRM"
+        eyebrow="Visao CRM"
         title="Lead 360"
-        subtitle="Empresa, histórico, produtos compatíveis, tabelas aplicáveis e alertas ANS em uma tela."
+        subtitle="Empresa, historico, caminhos possiveis, referencias internas e alertas para preparar repasse humano."
         actions={[
           <select key="lead" className="select" value={activeId} onChange={(event) => setActiveId(event.target.value)} aria-label="Selecionar lead">
             {leadProfiles.map((lead) => <option key={lead.id} value={lead.id}>{lead.company}</option>)}
           </select>,
-          <button key="quote" className="btn btn--primary" onClick={() => navigate('/cotacao')}>Gerar cotação</button>,
+          <button key="quote" className="btn btn--primary" onClick={() => navigate('/cotacao')}>Preparar handoff</button>,
         ]}
       />
 
       <section className="kpi-row">
         <Metric value={activeLead.score} label="score comercial" />
         <Metric value={activeLead.lives} label="vidas estimadas" />
-        <Metric value={compatiblePlans.length} label="planos compatíveis" />
+        <Metric value={compatiblePlans.length} label="caminhos possiveis" />
         <Metric value={ansAlerts.length} label="alertas ANS" />
       </section>
 
@@ -66,7 +66,7 @@ export default function Lead360({ path, navigate }) {
 
         <article className="card">
           <div className="toolbar toolbar-between">
-            <h3 className="flush">Próxima ação do agente</h3>
+            <h3 className="flush">Proxima acao do agente</h3>
             <span className="pill">{activeLead.origin}</span>
           </div>
           <p className="agent-output">{activeLead.nextAction}</p>
@@ -82,8 +82,8 @@ export default function Lead360({ path, navigate }) {
 
         <article className="card lead360-wide">
           <div className="toolbar toolbar-between">
-            <h3 className="flush">Planos compatíveis</h3>
-            <span className="pill">Catálogo</span>
+            <h3 className="flush">Caminhos possiveis</h3>
+            <span className="pill">Catalogo</span>
           </div>
           <div className="mini-card-grid">
             {compatiblePlans.map((plan) => (
@@ -98,14 +98,15 @@ export default function Lead360({ path, navigate }) {
 
         <article className="card">
           <div className="toolbar toolbar-between">
-            <h3 className="flush">Tabelas aplicáveis</h3>
-            <span className="pill">Preço</span>
+            <h3 className="flush">Referencias internas</h3>
+            <span className="pill">Corretor confirma</span>
           </div>
           <div className="stack-list">
             {applicableTables.map((table) => (
               <div key={table.id} className="stack-item">
                 <strong>{table.product}</strong>
                 <span>{table.region} · {table.validity}</span>
+                <small>Tabela deve ser validada pelo corretor antes da proposta.</small>
               </div>
             ))}
           </div>
