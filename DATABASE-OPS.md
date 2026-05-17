@@ -10,7 +10,7 @@ Manter o banco preparado para crescer de protótipo para CRM operacional com age
 - Versionar tabelas de preço e documentos ANS.
 - Separar dados operacionais de dados de conhecimento.
 - Manter rastreabilidade de agentes, aprovações humanas e mensagens enviadas.
-- Garantir que preço, cobertura, carência e reajuste sempre tenham fonte ou tabela vigente.
+- Garantir que cobertura, carência e reajuste tenham fonte; preço por operadora/região deve ser confirmado por corretor humano antes de virar proposta.
 
 ## Estratégia de crescimento
 
@@ -34,6 +34,13 @@ Status em 2026-05-16:
 - Leitura real validada para catálogo, tabelas de preço, Base ANS e agentes.
 - Relações usadas pelo frontend validadas: `operators`, `administrators`, `price_table_rows`, `agent_skills` e `agent_guardrails`.
 
+Redefinição em 2026-05-17:
+- O fluxo atual não usa tabela por operadora/UF como cotação automática.
+- O agente qualifica o lead, identifica UF/região, quantidade de vidas, perfil da empresa e urgência.
+- O agente sugere possíveis caminhos de atendimento e encaminha ao corretor humano.
+- O corretor confirma tabela, preço, operadora, região e condições comerciais antes de enviar proposta.
+- `price_tables` permanece como base interna de referência/validação, não como fonte final para resposta automática ao cliente.
+
 ### Fase 3 - Operação CRM
 - Persistir leads, conversas, mensagens, oportunidades e aprovações.
 - Introduzir autenticação e escopo por corretora/equipe.
@@ -51,7 +58,8 @@ Status em 2026-05-16:
 - Tempo médio de resposta por canal.
 - Taxa de aprovações humanas pendentes.
 - Runs de agente por status: concluído, revisão, bloqueado, erro.
-- Tabelas de preço próximas do vencimento.
+- Handoffs pendentes de confirmação humana de tabela/região.
+- Tabelas de preço internas próximas do vencimento.
 - Documentos ANS com status `review`.
 - Queries lentas por tabela operacional.
 
@@ -114,6 +122,7 @@ Próxima evolução:
 
 ## Regras de dados críticos
 
+- Nunca prometer ou enviar preço por operadora/região sem confirmação do corretor humano.
 - Nunca sobrescrever tabela de preço ativa: arquivar e criar nova versão.
 - Nunca apagar conversa; usar status ou soft delete quando necessário.
 - Nunca enviar mensagem de agente sem guardar proposta, aprovação e payload.

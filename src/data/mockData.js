@@ -320,14 +320,14 @@ export const agentProfiles = [
   },
   {
     id: 'agent-quote',
-    name: 'Agente de cotação',
-    role: 'Cruza região, vidas, catálogo e tabelas para preparar cenários.',
+    name: 'Agente de triagem',
+    role: 'Classifica região, vidas, perfil e urgência para preparar handoff ao corretor.',
     status: 'Revisão',
     tone: 'Preciso, transparente e sem exagero comercial',
     autonomy: 'Baixa',
     humanScore: 84,
-    guardrails: ['Usar tabela vigente', 'Mostrar premissas', 'Solicitar validação humana'],
-    skills: ['Comparação de planos', 'Faixas etárias', 'Resumo de proposta'],
+    guardrails: ['Não informar preço final', 'Registrar premissas', 'Encaminhar para corretor'],
+    skills: ['Classificação do lead', 'Resumo de handoff', 'Perguntas pendentes'],
   },
   {
     id: 'agent-compliance',
@@ -356,12 +356,12 @@ export const agentReviewQueue = [
   {
     id: 'review-2',
     lead: 'Ferrovia Norte',
-    agent: 'Agente de cotação',
-    type: 'Resumo de proposta',
+    agent: 'Agente de triagem',
+    type: 'Handoff ao corretor',
     risk: 'Alto',
     status: 'Revisar antes de enviar',
-    suggested: 'Com os dados atuais, encontrei alternativas que podem ser analisadas para a região de Curitiba. Antes de falar em economia, preciso confirmar rede, dependentes e contrato atual.',
-    whyHuman: 'Evita promessa de redução e pede dados faltantes antes de cotar.',
+    suggested: 'Lead com operação no PR, 118 vidas estimadas e urgência alta por reajuste. Recomendo corretor validar operadoras por região, rede desejada e tabela vigente antes de proposta.',
+    whyHuman: 'Encaminha contexto ao corretor sem prometer preço, economia ou operadora.',
   },
 ];
 
@@ -369,13 +369,13 @@ export const voicePrinciples = [
   'Escrever como uma pessoa útil, não como campanha automática.',
   'Usar frases curtas, contexto real e uma pergunta por vez.',
   'Assumir incerteza quando faltar dado: “preciso confirmar antes de te afirmar”.',
-  'Nunca prometer preço, cobertura ou redução de reajuste sem fonte e tabela vigente.',
+  'Nunca prometer preço, cobertura ou redução de reajuste; tabela regional deve ser confirmada pelo corretor.',
   'Encerrar com respeito quando houver negativa ou silêncio prolongado.',
 ];
 
 export const agentRuns = [
   ['10:42', 'Agente outbound', 'Gerou abordagem para Clinica Soma com sinal Google Business.', 'Aprovável'],
   ['10:38', 'Agente compliance ANS', 'Bloqueou resposta sobre carência sem contexto de contratação.', 'Bloqueado'],
-  ['10:22', 'Agente de cotação', 'Calculou cenário enfermaria/apartamento com tabela Amil SP.', 'Revisão'],
+  ['10:22', 'Agente de triagem', 'Preparou handoff com região, vidas, urgência e perguntas pendentes.', 'Revisão'],
   ['09:58', 'Agente de atendimento', 'Resumiu conversa e recomendou handoff para corretor.', 'Concluído'],
 ];

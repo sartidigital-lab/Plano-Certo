@@ -87,7 +87,15 @@ Este documento descreve a estrutura alvo para trocar os mocks atuais por Supabas
 - sent_at
 - created_at
 
-## Catálogo e preço
+## Catálogo, elegibilidade e handoff comercial
+
+Decisão de fluxo em 2026-05-17:
+- O agente não calcula nem promete preço final por operadora, UF ou região.
+- O agente classifica o lead, identifica UF/região, quantidade de vidas, perfil da empresa e urgência.
+- O agente sugere caminhos possíveis de atendimento com base em catálogo, elegibilidade e sinais comerciais.
+- O agente encaminha o lead ao corretor humano com um resumo pronto para ação.
+- Tabela por operadora/região deve ser confirmada pelo corretor antes de qualquer proposta ao cliente.
+- `price_tables` e `price_table_rows` ficam como base interna em validação, não como fonte final de cotação automática.
 
 ### operators
 - id
@@ -257,21 +265,24 @@ Output:
 - requires_approval
 - next_follow_up_at
 
-### Agente de cotação
+### Agente de triagem e handoff comercial
 Input:
 - lead_profile
-- region
+- uf_region
 - lives
-- age_mix
-- selected_plan_ids
-- selected_price_table_ids
+- company_profile
+- urgency
+- commercial_context
 
 Output:
-- quote_summary
-- quote_items
+- lead_classification
+- region_and_lives_summary
+- suggested_service_paths
+- pending_questions
+- broker_handoff_summary
 - assumptions
 - missing_data
-- requires_human_validation
+- requires_broker_confirmation
 
 ### Agente compliance ANS
 Input:
@@ -289,7 +300,9 @@ Output:
 
 ## Princípios de implementação
 
-- O agente nunca calcula preço sem `price_table_rows`.
+- O agente nunca calcula, promete ou envia preço final por operadora/região.
+- Tabelas por UF/região são referência interna em validação e devem ser confirmadas pelo corretor humano.
+- O agente deve encaminhar lead qualificado ao corretor com resumo, urgência, região, vidas estimadas e perguntas pendentes.
 - O agente nunca responde cobertura, carência, reajuste ou registro sem citação da Base ANS.
 - Toda mensagem outbound precisa de origem do dado, justificativa e status de consentimento.
 - Toda resposta com promessa comercial deve passar por aprovação humana.
