@@ -132,6 +132,10 @@ Próxima evolução:
 
 - `organizations`
 - `organization_members`
+- `broker_handoffs`
+- `google_places_cache`
+- `lead_enrichment_events`
+- `whatsapp_webhook_events`
 - `quote_requests`
 - `quote_items`
 - `agent_citations`
