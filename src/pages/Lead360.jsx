@@ -34,7 +34,7 @@ export default function Lead360({ path, navigate }) {
           <select key="lead" className="select" value={activeId} onChange={(event) => setActiveId(event.target.value)} aria-label="Selecionar lead">
             {leadProfiles.map((lead) => <option key={lead.id} value={lead.id}>{lead.company}</option>)}
           </select>,
-          <button key="quote" className="btn btn--primary" onClick={() => navigate('/cotacao')}>Preparar handoff</button>,
+          <button key="quote" className="btn btn--primary" onClick={() => navigate('/handoff')}>Preparar handoff</button>,
         ]}
       />
 

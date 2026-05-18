@@ -10,7 +10,7 @@ const productNav = [
   ['Pipeline', '/pipeline', '31'],
   ['Agentes', '/agentes', '4'],
   ['Lead 360', '/lead-360', '5'],
-  ['Handoff', '/cotacao', '3'],
+  ['Handoff', '/handoff', '3'],
   ['Catálogo', '/catalogo', '24'],
   ['Referencias', '/tabelas', '8'],
   ['Base ANS', '/ans', '36'],

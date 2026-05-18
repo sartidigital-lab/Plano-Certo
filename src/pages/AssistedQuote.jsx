@@ -1,43 +1,58 @@
 import { useMemo, useState } from 'react';
 import Metric from '../components/ui/Metric.jsx';
 import WorkspaceTop from '../components/workspace/WorkspaceTop.jsx';
+import useAsyncResource from '../hooks/useAsyncResource.js';
 import { getPlansByIds, getPriceTableById, listPriceTables } from '../services/catalogService.js';
+import { fetchLeads, listLeads } from '../services/crmService.js';
+import {
+  buildBrokerHandoffSummary,
+  buildPendingQuestions,
+  buildSuggestedPaths,
+  classifyLeadForHandoff,
+  getHandoffUrgency,
+  inferRegion,
+} from '../services/handoffService.js';
 import { listAnsKnowledge } from '../services/knowledgeService.js';
-import { getDefaultQuoteScenario } from '../services/quoteService.js';
 import ProductShell from '../layouts/ProductShell.jsx';
 
+const defaultPlanIds = ['pc-amil-s250-sp', 'pc-sulamerica-exato-rj', 'pc-bradesco-efetivo-pr'];
+
 export default function AssistedQuote({ path, navigate }) {
-  const scenario = getDefaultQuoteScenario();
+  const { data: leads, status } = useAsyncResource(fetchLeads, listLeads(), []);
   const ansKnowledge = listAnsKnowledge();
   const priceTables = listPriceTables();
-  const [selectedTableId, setSelectedTableId] = useState(scenario.selectedTableIds[0]);
+  const [activeLeadId, setActiveLeadId] = useState('');
+  const [selectedTableId, setSelectedTableId] = useState(priceTables[0]?.id || '');
+  const activeLead = leads.find((lead) => lead.id === activeLeadId) || leads[0];
   const selectedTable = getPriceTableById(selectedTableId);
-  const selectedPlans = getPlansByIds(scenario.selectedPlanIds);
-  const pendingQuestions = useMemo(() => [
-    'Confirmar UF/regiao exata de contratacao e abrangencia desejada.',
-    'Validar quantidade de vidas, dependentes e faixa etaria predominante.',
-    'Checar operadora atual, reajuste recebido e rede indispensavel.',
-    'Confirmar tabela vigente com o corretor antes de falar em preco.',
-  ], []);
+  const selectedPlans = getPlansByIds(defaultPlanIds);
+  const pendingQuestions = useMemo(() => buildPendingQuestions(activeLead), [activeLead]);
+  const suggestedPaths = useMemo(() => buildSuggestedPaths(activeLead, selectedPlans), [activeLead, selectedPlans]);
+  const handoffSummary = useMemo(() => buildBrokerHandoffSummary(activeLead), [activeLead]);
+  const urgency = getHandoffUrgency(activeLead);
+  const classification = classifyLeadForHandoff(activeLead);
 
   return (
     <ProductShell path={path} navigate={navigate}>
       <WorkspaceTop
         eyebrow="Triagem assistida"
         title="Handoff para corretor"
-        subtitle="Classifique o lead, organize contexto e gere um resumo seguro para o corretor confirmar tabela, operadora e regiao."
+        subtitle="Selecione um lead, organize contexto e gere um resumo seguro para o corretor confirmar tabela, operadora e regiao."
         actions={[
+          <select key="lead" className="select" value={activeLead?.id || ''} onChange={(event) => setActiveLeadId(event.target.value)} aria-label="Selecionar lead">
+            {leads.map((lead) => <option key={lead.id || lead.company} value={lead.id || lead.company}>{lead.company}</option>)}
+          </select>,
           <select key="table" className="select" value={selectedTableId} onChange={(event) => setSelectedTableId(event.target.value)} aria-label="Selecionar referencia interna">
             {priceTables.map((table) => <option key={table.id} value={table.id}>{table.product} · {table.region}</option>)}
           </select>,
-          <button key="handoff" className="btn btn--primary">Encaminhar para corretor</button>,
+          <span key="source" className="pill">{status === 'ready' ? 'Supabase' : 'Mock'}</span>,
         ]}
       />
 
       <section className="kpi-row">
-        <Metric value={scenario.lives} label="vidas estimadas" />
-        <Metric value={scenario.region} label="regiao informada" />
-        <Metric value={selectedPlans.length} label="caminhos possiveis" />
+        <Metric value={activeLead?.lives || 'N/D'} label="vidas estimadas" />
+        <Metric value={inferRegion(activeLead)} label="regiao informada" />
+        <Metric value={urgency} label="urgencia sugerida" />
         <Metric value="Humano" label="confirmacao de tabela" />
       </section>
 
@@ -46,16 +61,18 @@ export default function AssistedQuote({ path, navigate }) {
           <div className="toolbar toolbar-between">
             <div>
               <p className="eyebrow">Lead classificado</p>
-              <h3 className="flush">{scenario.company}</h3>
+              <h3 className="flush">{activeLead?.company}</h3>
             </div>
-            <span className="pill">{scenario.region}</span>
+            <span className="pill">{classification}</span>
           </div>
           <div className="priority-list">
-            {scenario.priorities.map((priority) => <span key={priority} className="status status--info">{priority}</span>)}
+            <span className="status status--info">{activeLead?.origin}</span>
+            <span className="status status--success">Score {activeLead?.score}</span>
+            <span className="status status--warn">{activeLead?.status}</span>
           </div>
           <div className="citation-box">
             <strong>Resumo para o corretor</strong>
-            <p>Empresa com {scenario.lives} vidas estimadas em {scenario.region}. Lead deve ser conduzido por corretor humano para confirmar operadoras disponiveis, tabela vigente por regiao, rede desejada e premissas antes de proposta.</p>
+            <p>{handoffSummary}</p>
           </div>
         </article>
 
@@ -85,11 +102,11 @@ export default function AssistedQuote({ path, navigate }) {
             <span className="pill">Sem promessa de preco</span>
           </div>
           <div className="mini-card-grid">
-            {selectedPlans.map((plan) => (
-              <div key={plan.id} className="mini-record">
-                <strong>{plan.product}</strong>
-                <span>{plan.operator} · {plan.copay}</span>
-                <small>{plan.network}</small>
+            {suggestedPaths.map((option) => (
+              <div key={option.title} className="mini-record">
+                <strong>{option.title}</strong>
+                <span>{option.meta}</span>
+                <small>{option.note}</small>
               </div>
             ))}
           </div>

@@ -24,6 +24,7 @@ export const routes = {
   '/pipeline': Pipeline,
   '/agentes': AgentConsole,
   '/lead-360': Lead360,
+  '/handoff': AssistedQuote,
   '/cotacao': AssistedQuote,
   '/catalogo': PlanCatalog,
   '/tabelas': PriceTables,
