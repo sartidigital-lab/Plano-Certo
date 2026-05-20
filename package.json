@@ -11,7 +11,7 @@
     "supabase:check": "node scripts/check-supabase.mjs",
     "supabase:login": "supabase login",
     "supabase:functions": "supabase functions",
-    "supabase:deploy:whatsapp": "supabase functions deploy whatsapp-webhook --project-ref errbmfumiixmyjiltdtq --use-api"
+    "supabase:deploy:whatsapp": "supabase functions deploy whatsapp-webhook --project-ref errbmfumiixmyjiltdtq --use-api --no-verify-jwt"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.105.4",
