@@ -52,6 +52,13 @@ npm run supabase:deploy:whatsapp
 
 O deploy usa `--no-verify-jwt` porque a Meta nao envia JWT da Supabase nos webhooks. A validacao de seguranca fica por `WHATSAPP_VERIFY_TOKEN` no handshake e `WHATSAPP_APP_SECRET` na assinatura `x-hub-signature-256`.
 
+Validar o handshake antes de configurar a Meta:
+
+```powershell
+$env:WHATSAPP_VERIFY_TOKEN="<mesmo-token-configurado-no-supabase>"
+npm run whatsapp:webhook:check
+```
+
 No painel da Meta, configurar o callback para a URL da Edge Function e usar o mesmo `WHATSAPP_VERIFY_TOKEN`.
 
 ## Proximos cuidados
