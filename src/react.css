@@ -282,6 +282,27 @@
   background: var(--surface);
 }
 
+.inbox-card {
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+}
+
+.inbox-card small {
+  display: block;
+  margin-top: 8px;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.bubble-status {
+  display: block;
+  margin-top: 6px;
+  font-size: 12px;
+  opacity: 0.78;
+}
+
 .handoff-queue-message {
   margin: 14px 0 0;
   border: 1px solid var(--border);

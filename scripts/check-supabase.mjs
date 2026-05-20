@@ -21,6 +21,8 @@ const tables = [
   'ans_documents',
   'agent_profiles',
   'broker_handoffs',
+  'whatsapp_conversations',
+  'messages',
 ];
 
 const results = [];
