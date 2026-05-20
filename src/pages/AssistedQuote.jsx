@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Metric from '../components/ui/Metric.jsx';
 import WorkspaceTop from '../components/workspace/WorkspaceTop.jsx';
 import useAsyncResource from '../hooks/useAsyncResource.js';
@@ -10,8 +10,11 @@ import {
   buildSuggestedPaths,
   classifyLeadForHandoff,
   createBrokerHandoff,
+  fetchBrokerHandoffs,
   getHandoffUrgency,
   inferRegion,
+  listBrokerHandoffs,
+  updateBrokerHandoffStatus,
 } from '../services/handoffService.js';
 import { listAnsKnowledge } from '../services/knowledgeService.js';
 import ProductShell from '../layouts/ProductShell.jsx';
@@ -25,6 +28,8 @@ export default function AssistedQuote({ path, navigate }) {
   const [activeLeadId, setActiveLeadId] = useState('');
   const [selectedTableId, setSelectedTableId] = useState(priceTables[0]?.id || '');
   const [saveState, setSaveState] = useState({ status: 'idle', message: '' });
+  const [handoffs, setHandoffs] = useState(listBrokerHandoffs());
+  const [queueState, setQueueState] = useState({ status: 'loading', message: '' });
   const activeLead = leads.find((lead) => lead.id === activeLeadId) || leads[0];
   const selectedTable = getPriceTableById(selectedTableId);
   const selectedPlans = getPlansByIds(defaultPlanIds);
@@ -33,6 +38,29 @@ export default function AssistedQuote({ path, navigate }) {
   const handoffSummary = useMemo(() => buildBrokerHandoffSummary(activeLead), [activeLead]);
   const urgency = getHandoffUrgency(activeLead);
   const classification = classifyLeadForHandoff(activeLead);
+
+  useEffect(() => {
+    loadHandoffs();
+  }, []);
+
+  async function loadHandoffs() {
+    setQueueState({ status: 'loading', message: 'Carregando repasses...' });
+
+    try {
+      const records = await fetchBrokerHandoffs();
+      setHandoffs(records);
+      setQueueState({
+        status: 'ready',
+        message: records.length === 0 ? 'Nenhum handoff salvo ainda.' : '',
+      });
+    } catch (error) {
+      setHandoffs(listBrokerHandoffs());
+      setQueueState({
+        status: 'fallback',
+        message: `Fila em modo demo: ${error.message}`,
+      });
+    }
+  }
 
   async function saveHandoff() {
     setSaveState({ status: 'saving', message: 'Gravando handoff...' });
@@ -51,11 +79,26 @@ export default function AssistedQuote({ path, navigate }) {
           ? `Handoff salvo para o corretor. ID ${result.id.slice(0, 8)}.`
           : 'Handoff simulado no modo demo.',
       });
+      await loadHandoffs();
     } catch (error) {
       setSaveState({
         status: 'error',
         message: `Nao foi possivel salvar o handoff: ${error.message}`,
       });
+    }
+  }
+
+  async function changeHandoffStatus(id, nextStatus) {
+    setHandoffs((current) => current.map((handoff) => (
+      handoff.id === id ? { ...handoff, status: nextStatus } : handoff
+    )));
+
+    try {
+      await updateBrokerHandoffStatus(id, nextStatus);
+      setQueueState({ status: 'ready', message: 'Status do repasse atualizado.' });
+    } catch (error) {
+      setQueueState({ status: 'fallback', message: `Nao foi possivel atualizar: ${error.message}` });
+      await loadHandoffs();
     }
   }
 
@@ -172,7 +215,77 @@ export default function AssistedQuote({ path, navigate }) {
             ))}
           </div>
         </article>
+
+        <article className="card quote-wide">
+          <div className="toolbar toolbar-between">
+            <div>
+              <p className="eyebrow">Fila do corretor</p>
+              <h3 className="flush">Repasses pendentes</h3>
+            </div>
+            <button className="btn" type="button" onClick={loadHandoffs}>Atualizar fila</button>
+          </div>
+
+          {queueState.message && (
+            <p className={`handoff-queue-message handoff-queue-message--${queueState.status}`}>
+              {queueState.message}
+            </p>
+          )}
+
+          <div className="handoff-queue">
+            {handoffs.map((handoff) => (
+              <article key={handoff.id} className="handoff-card">
+                <div className="toolbar toolbar-between">
+                  <div>
+                    <strong>{handoff.company}</strong>
+                    <p>{handoff.region} · {handoff.estimatedLives} vidas · {handoff.urgency}</p>
+                  </div>
+                  <span className={`status ${getStatusClass(handoff.status)}`}>{formatHandoffStatus(handoff.status)}</span>
+                </div>
+                <p className="handoff-card__summary">{handoff.summary}</p>
+                <div className="handoff-card__meta">
+                  <span>{handoff.classification}</span>
+                  <span>Tabela: {handoff.tableConfirmationStatus === 'pending' ? 'confirmar' : handoff.tableConfirmationStatus}</span>
+                  <span>{formatDateTime(handoff.createdAt)}</span>
+                </div>
+                <div className="approval-panel">
+                  <button className="btn" type="button" onClick={() => changeHandoffStatus(handoff.id, 'assigned')}>Assumir</button>
+                  <button className="btn" type="button" onClick={() => changeHandoffStatus(handoff.id, 'in_progress')}>Em andamento</button>
+                  <button className="btn btn--primary" type="button" onClick={() => changeHandoffStatus(handoff.id, 'completed')}>Concluir</button>
+                </div>
+              </article>
+            ))}
+          </div>
+        </article>
       </section>
     </ProductShell>
   );
+}
+
+function formatHandoffStatus(status) {
+  const labels = {
+    pending: 'Pendente',
+    assigned: 'Assumido',
+    in_progress: 'Em andamento',
+    completed: 'Concluido',
+    canceled: 'Cancelado',
+  };
+
+  return labels[status] || status;
+}
+
+function getStatusClass(status) {
+  if (status === 'completed') return 'status--success';
+  if (status === 'pending') return 'status--warn';
+  if (status === 'canceled') return 'status--danger';
+  return 'status--info';
+}
+
+function formatDateTime(value) {
+  if (!value) return 'Sem data';
+  return new Intl.DateTimeFormat('pt-BR', {
+    day: '2-digit',
+    month: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+  }).format(new Date(value));
 }

@@ -1,4 +1,5 @@
 import { supabase } from '../lib/supabaseClient.js';
+import { leads } from '../data/mockData.js';
 
 export function classifyLeadForHandoff(lead) {
   const score = Number(lead?.score || 0);
@@ -91,6 +92,9 @@ export async function createBrokerHandoff({ lead, pendingQuestions = [], suggest
     created_by: 'agent',
     metadata: {
       source: 'frontend_handoff',
+      lead_company: lead?.company || 'Empresa sem nome',
+      lead_origin: lead?.origin || null,
+      lead_score: lead?.score || null,
       selected_table: selectedTable
         ? {
             id: selectedTable.id,
@@ -115,6 +119,71 @@ export async function createBrokerHandoff({ lead, pendingQuestions = [], suggest
     mode: 'supabase',
     ...data,
     summary: payload.summary,
+  };
+}
+
+export function listBrokerHandoffs() {
+  return leads.slice(0, 3).map((lead, index) => ({
+    id: `mock-handoff-${index + 1}`,
+    company: lead.company,
+    summary: buildBrokerHandoffSummary(lead),
+    classification: classifyLeadForHandoff(lead),
+    urgency: getHandoffUrgency(lead),
+    region: inferRegion(lead),
+    estimatedLives: String(lead.lives || 'a confirmar'),
+    status: index === 0 ? 'pending' : 'assigned',
+    tableConfirmationStatus: 'pending',
+    pendingQuestions: buildPendingQuestions(lead),
+    suggestedPaths: [],
+    createdAt: new Date(Date.now() - index * 3600000).toISOString(),
+  }));
+}
+
+export async function fetchBrokerHandoffs() {
+  if (!supabase) return listBrokerHandoffs();
+
+  const { data, error } = await supabase
+    .from('broker_handoffs')
+    .select('id, lead_id, summary, classification, urgency, region, estimated_lives, status, table_confirmation_status, pending_questions, suggested_paths, metadata, created_at, leads(company_name)')
+    .order('created_at', { ascending: false })
+    .limit(20);
+
+  if (error) throw error;
+
+  return (data || []).map(mapBrokerHandoff);
+}
+
+export async function updateBrokerHandoffStatus(id, status) {
+  if (!supabase || String(id).startsWith('mock-')) {
+    return { id, status, mode: 'mock' };
+  }
+
+  const { data, error } = await supabase
+    .from('broker_handoffs')
+    .update({ status, updated_at: new Date().toISOString() })
+    .eq('id', id)
+    .select('id, status')
+    .single();
+
+  if (error) throw error;
+  return { ...data, mode: 'supabase' };
+}
+
+function mapBrokerHandoff(handoff) {
+  return {
+    id: handoff.id,
+    leadId: handoff.lead_id,
+    company: handoff.leads?.company_name || handoff.metadata?.lead_company || 'Lead sem empresa',
+    summary: handoff.summary,
+    classification: handoff.classification,
+    urgency: handoff.urgency,
+    region: handoff.region || 'Regiao a confirmar',
+    estimatedLives: handoff.estimated_lives || 'a confirmar',
+    status: handoff.status,
+    tableConfirmationStatus: handoff.table_confirmation_status,
+    pendingQuestions: handoff.pending_questions || [],
+    suggestedPaths: handoff.suggested_paths || [],
+    createdAt: handoff.created_at,
   };
 }
 

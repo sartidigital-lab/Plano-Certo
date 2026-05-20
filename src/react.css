@@ -242,6 +242,64 @@
   background: color-mix(in oklch, var(--danger), white 90%);
 }
 
+.handoff-queue {
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.handoff-card {
+  display: grid;
+  gap: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+  background: oklch(99% 0.003 250);
+}
+
+.handoff-card p {
+  margin: 0;
+}
+
+.handoff-card__summary {
+  color: var(--fg);
+  line-height: 1.5;
+}
+
+.handoff-card__meta {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.handoff-card__meta span {
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 5px 8px;
+  background: var(--surface);
+}
+
+.handoff-queue-message {
+  margin: 14px 0 0;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 12px;
+  color: var(--muted);
+}
+
+.handoff-queue-message--fallback {
+  border-color: color-mix(in oklch, var(--danger), var(--border) 58%);
+  color: var(--fg);
+}
+
+.status--danger {
+  color: oklch(40% 0.14 25);
+  background: oklch(94% 0.045 25);
+}
+
 @media (max-width: 1180px) {
   .catalog-layout {
     grid-template-columns: 1fr;
