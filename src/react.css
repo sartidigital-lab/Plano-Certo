@@ -217,6 +217,31 @@
   line-height: 1.45;
 }
 
+.handoff-notice {
+  margin: 0 0 18px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  background: var(--surface);
+  color: var(--fg);
+  font-weight: 700;
+}
+
+.handoff-notice--saving {
+  border-color: color-mix(in oklch, var(--accent), var(--border) 48%);
+  background: var(--accent-soft);
+}
+
+.handoff-notice--saved {
+  border-color: color-mix(in oklch, var(--success), var(--border) 42%);
+  background: color-mix(in oklch, var(--success), white 88%);
+}
+
+.handoff-notice--error {
+  border-color: color-mix(in oklch, var(--danger), var(--border) 35%);
+  background: color-mix(in oklch, var(--danger), white 90%);
+}
+
 @media (max-width: 1180px) {
   .catalog-layout {
     grid-template-columns: 1fr;

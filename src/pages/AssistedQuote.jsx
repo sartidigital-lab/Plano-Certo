@@ -9,6 +9,7 @@ import {
   buildPendingQuestions,
   buildSuggestedPaths,
   classifyLeadForHandoff,
+  createBrokerHandoff,
   getHandoffUrgency,
   inferRegion,
 } from '../services/handoffService.js';
@@ -23,6 +24,7 @@ export default function AssistedQuote({ path, navigate }) {
   const priceTables = listPriceTables();
   const [activeLeadId, setActiveLeadId] = useState('');
   const [selectedTableId, setSelectedTableId] = useState(priceTables[0]?.id || '');
+  const [saveState, setSaveState] = useState({ status: 'idle', message: '' });
   const activeLead = leads.find((lead) => lead.id === activeLeadId) || leads[0];
   const selectedTable = getPriceTableById(selectedTableId);
   const selectedPlans = getPlansByIds(defaultPlanIds);
@@ -31,6 +33,31 @@ export default function AssistedQuote({ path, navigate }) {
   const handoffSummary = useMemo(() => buildBrokerHandoffSummary(activeLead), [activeLead]);
   const urgency = getHandoffUrgency(activeLead);
   const classification = classifyLeadForHandoff(activeLead);
+
+  async function saveHandoff() {
+    setSaveState({ status: 'saving', message: 'Gravando handoff...' });
+
+    try {
+      const result = await createBrokerHandoff({
+        lead: activeLead,
+        pendingQuestions,
+        suggestedPaths,
+        selectedTable,
+      });
+
+      setSaveState({
+        status: 'saved',
+        message: result.mode === 'supabase'
+          ? `Handoff salvo para o corretor. ID ${result.id.slice(0, 8)}.`
+          : 'Handoff simulado no modo demo.',
+      });
+    } catch (error) {
+      setSaveState({
+        status: 'error',
+        message: `Nao foi possivel salvar o handoff: ${error.message}`,
+      });
+    }
+  }
 
   return (
     <ProductShell path={path} navigate={navigate}>
@@ -45,9 +72,18 @@ export default function AssistedQuote({ path, navigate }) {
           <select key="table" className="select" value={selectedTableId} onChange={(event) => setSelectedTableId(event.target.value)} aria-label="Selecionar referencia interna">
             {priceTables.map((table) => <option key={table.id} value={table.id}>{table.product} · {table.region}</option>)}
           </select>,
+          <button key="save" className="btn btn--primary" type="button" onClick={saveHandoff} disabled={saveState.status === 'saving'}>
+            {saveState.status === 'saving' ? 'Salvando...' : 'Salvar handoff'}
+          </button>,
           <span key="source" className="pill">{status === 'ready' ? 'Supabase' : 'Mock'}</span>,
         ]}
       />
+
+      {saveState.message && (
+        <section className={`handoff-notice handoff-notice--${saveState.status}`} role="status">
+          {saveState.message}
+        </section>
+      )}
 
       <section className="kpi-row">
         <Metric value={activeLead?.lives || 'N/D'} label="vidas estimadas" />

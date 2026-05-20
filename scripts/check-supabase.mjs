@@ -20,6 +20,7 @@ const tables = [
   'price_tables',
   'ans_documents',
   'agent_profiles',
+  'broker_handoffs',
 ];
 
 const results = [];

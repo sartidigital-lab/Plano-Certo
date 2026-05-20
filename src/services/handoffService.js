@@ -1,3 +1,5 @@
+import { supabase } from '../lib/supabaseClient.js';
+
 export function classifyLeadForHandoff(lead) {
   const score = Number(lead?.score || 0);
   if (score >= 90) return 'Prioridade alta';
@@ -59,4 +61,63 @@ export function buildBrokerHandoffSummary(lead) {
     `Urgencia sugerida: ${getHandoffUrgency(lead)}.`,
     'Corretor deve confirmar operadoras, rede, tabela regional vigente e condicoes comerciais antes de qualquer proposta.',
   ].join(' ');
+}
+
+export async function createBrokerHandoff({ lead, pendingQuestions = [], suggestedPaths = [], selectedTable } = {}) {
+  if (!supabase) {
+    return {
+      mode: 'mock',
+      id: `mock-handoff-${Date.now()}`,
+      summary: buildBrokerHandoffSummary(lead),
+    };
+  }
+
+  const payload = {
+    lead_id: isUuid(lead?.id) ? lead.id : null,
+    summary: buildBrokerHandoffSummary(lead),
+    classification: classifyLeadForHandoff(lead),
+    urgency: getHandoffUrgency(lead),
+    region: inferRegion(lead),
+    estimated_lives: String(lead?.lives || 'a confirmar'),
+    pending_questions: pendingQuestions,
+    suggested_paths: suggestedPaths.map((path) => ({
+      title: path.title,
+      meta: path.meta,
+      note: path.note,
+    })),
+    price_confirmation_required: true,
+    table_confirmation_status: 'pending',
+    status: 'pending',
+    created_by: 'agent',
+    metadata: {
+      source: 'frontend_handoff',
+      selected_table: selectedTable
+        ? {
+            id: selectedTable.id,
+            product: selectedTable.product,
+            operator: selectedTable.operator,
+            administrator: selectedTable.administrator,
+            region: selectedTable.region,
+          }
+        : null,
+    },
+  };
+
+  const { data, error } = await supabase
+    .from('broker_handoffs')
+    .insert(payload)
+    .select('id, status, created_at')
+    .single();
+
+  if (error) throw error;
+
+  return {
+    mode: 'supabase',
+    ...data,
+    summary: payload.summary,
+  };
+}
+
+function isUuid(value) {
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(String(value || ''));
 }
