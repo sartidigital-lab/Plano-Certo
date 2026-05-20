@@ -32,11 +32,22 @@ SUPABASE_SERVICE_ROLE_KEY=<service role somente no backend>
 
 ## Publicacao
 
-A CLI do Supabase ainda nao esta instalada neste ambiente. Quando instalarmos, publicar com:
+A CLI do Supabase esta instalada como dependencia de desenvolvimento do projeto. Antes do primeiro deploy, autenticar:
 
 ```bash
-supabase functions deploy whatsapp-webhook --project-ref errbmfumiixmyjiltdtq
-supabase secrets set WHATSAPP_VERIFY_TOKEN=... WHATSAPP_APP_SECRET=... --project-ref errbmfumiixmyjiltdtq
+npm run supabase:login
+```
+
+Depois configurar os segredos:
+
+```bash
+npx supabase secrets set WHATSAPP_VERIFY_TOKEN=... WHATSAPP_APP_SECRET=... --project-ref errbmfumiixmyjiltdtq
+```
+
+Publicar a funcao:
+
+```bash
+npm run supabase:deploy:whatsapp
 ```
 
 No painel da Meta, configurar o callback para a URL da Edge Function e usar o mesmo `WHATSAPP_VERIFY_TOKEN`.
