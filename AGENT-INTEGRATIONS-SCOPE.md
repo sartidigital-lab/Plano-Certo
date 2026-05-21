@@ -115,10 +115,17 @@ Usar WhatsApp Business Platform Cloud API diretamente pela Meta para reduzir cus
 
 ## Ferramentas opcionais
 
-- n8n self-hosted para prototipos internos de automacao, se quisermos montar fluxos rapidamente sem escrever tudo em Edge Functions.
+- n8n self-hosted em VPS para orquestrar WhatsApp, Google, Supabase e agentes com baixo custo operacional.
 - Google Sheets apenas como painel operacional temporario, nao como fonte definitiva.
 - Sentry ou Logtail/Axiom depois que houver volume real de mensagens.
 - Provedor BSP de WhatsApp somente se a Cloud API direta virar gargalo operacional.
+
+## Ambiente preparado
+
+- `infra/n8n/docker-compose.yml` para VPS com Docker.
+- `infra/n8n/.env.example` com variaveis necessarias.
+- `infra/n8n/workflows/README.md` com os workflows MVP.
+- `AUTOMATION-ENVIRONMENT.md` com checklist de assinatura, ativacao e seguranca.
 
 ## Fora do escopo inicial
 
