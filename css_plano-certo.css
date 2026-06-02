@@ -22,6 +22,7 @@
   --glass-blur: blur(12px) saturate(180%);
   --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.06);
   --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --gradient-start: oklch(98% 0.005 250);
   color-scheme: light dark;
 }
 
@@ -44,6 +45,7 @@
     --glass-bg: rgba(9, 9, 11, 0.45);
     --glass-border: rgba(255, 255, 255, 0.06);
     --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+    --gradient-start: oklch(14% 0.01 250);
   }
 }
 
@@ -64,7 +66,7 @@ body {
   min-width: 0;
   color: var(--fg);
   background:
-    linear-gradient(180deg, oklch(100% 0 0), var(--bg) 44rem),
+    linear-gradient(180deg, var(--gradient-start), var(--bg) 44rem),
     var(--bg);
 }
 
@@ -494,7 +496,7 @@ h3 {
 .side-nav a:hover,
 .side-nav a[aria-current="page"] {
   color: var(--fg);
-  background: oklch(96% 0.006 250);
+  background: var(--border);
 }
 
 .workspace {
@@ -724,13 +726,14 @@ h3 {
   border-radius: 14px;
   padding: 12px 14px;
   line-height: 1.45;
-  background: oklch(96% 0.006 250);
+  background: var(--border);
+  color: var(--fg);
 }
 
 .bubble--agent {
   justify-self: end;
   color: white;
-  background: var(--fg);
+  background: var(--accent);
 }
 
 .composer {
