@@ -44,20 +44,38 @@ export default function Home({ navigate, onSessionChange }) {
               </span>
             </div>
             <p className="eyebrow">Console operacional</p>
-            <h1>Entre para priorizar leads, revisar agentes e acompanhar propostas.</h1>
-            <p className="lede">A primeira tela agora abre como produto: foco em rotina comercial, fila de atendimento, governanca dos agentes e base de planos.</p>
-            <div className="login-metrics" aria-label="Resumo da operacao">
-              <div><strong>42</strong><span>leads qualificados</span></div>
-              <div><strong>4</strong><span>agentes ativos</span></div>
-              <div><strong>3</strong><span>tabelas vigentes</span></div>
+            <h1>Gerencie propostas, leads e agentes em tempo real.</h1>
+            <p className="lede">Painel integrado para corretoras de planos de saúde: priorize oportunidades, acompanhe o pipeline comercial e governe seus agentes de IA com controle total.</p>
+            <div className="login-features" aria-label="Diferenciais do produto">
+              <div className="login-feature">
+                <span className="login-feature__icon">⚡</span>
+                <div>
+                  <strong>Priorização automática</strong>
+                  <span>Leads qualificados e ordenados por potencial de conversão</span>
+                </div>
+              </div>
+              <div className="login-feature">
+                <span className="login-feature__icon">🤖</span>
+                <div>
+                  <strong>Agentes de IA auditáveis</strong>
+                  <span>Revise, aprove e ajuste cada mensagem antes do envio</span>
+                </div>
+              </div>
+              <div className="login-feature">
+                <span className="login-feature__icon">📋</span>
+                <div>
+                  <strong>Base ANS integrada</strong>
+                  <span>Catálogo de planos atualizado com tabelas vigentes da operadora</span>
+                </div>
+              </div>
             </div>
           </section>
 
           <form className="login-panel" onSubmit={enterWorkspace}>
             <div>
-              <p className="eyebrow">Acesso</p>
+              <p className="eyebrow">Acesso seguro</p>
               <h2>Plano Certo</h2>
-              <p className="muted">Entre com a conta da corretora ou use o modo demo enquanto os usuarios finais sao provisionados.</p>
+              <p className="muted">Insira suas credenciais para acessar o painel operacional.</p>
             </div>
 
             <label className="field">
