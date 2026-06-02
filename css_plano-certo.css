@@ -138,7 +138,7 @@ button:disabled {
   display: grid;
   place-items: center;
   border-radius: 10px;
-  color: white;
+  color: var(--bg);
   background: var(--fg);
   font-family: var(--font-mono);
   font-size: 13px;
