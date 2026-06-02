@@ -125,19 +125,31 @@ create table if not exists public.conversations (
   id uuid primary key default gen_random_uuid(),
   lead_id uuid references public.leads(id) on delete cascade,
   channel text not null,
+  contact_identity text,
   status text not null default 'open',
   assigned_agent_id uuid,
   assigned_user_id uuid,
+  assigned_to_consultant boolean not null default false,
+  handoff_at timestamptz,
   last_message_at timestamptz,
-  created_at timestamptz not null default now()
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
 );
 
 create table if not exists public.messages (
   id uuid primary key default gen_random_uuid(),
   conversation_id uuid references public.conversations(id) on delete cascade,
-  sender_type text not null check (sender_type in ('lead', 'agent', 'user', 'system')),
+  lead_id uuid references public.leads(id) on delete set null,
+  direction text check (direction in ('inbound', 'outbound')),
+  channel text,
+  content text,
+  sent_by text,
+  external_id text,
+  status text,
+  agent_name text,
+  sender_type text check (sender_type in ('lead', 'agent', 'user', 'system')),
   sender_id uuid,
-  body text not null,
+  body text,
   metadata jsonb not null default '{}'::jsonb,
   risk_level text not null default 'low',
   requires_approval boolean not null default false,
@@ -234,6 +246,37 @@ create table if not exists public.human_approvals (
   created_at timestamptz not null default now()
 );
 
+create table if not exists public.inbound_webhook_events (
+  id uuid primary key default gen_random_uuid(),
+  channel text not null,
+  event_type text not null default 'unknown',
+  external_id text,
+  phone_number_id text,
+  wa_id text,
+  payload jsonb not null default '{}'::jsonb,
+  processing_status text not null default 'received'
+    check (processing_status in ('received', 'processed', 'ignored', 'error')),
+  error_message text,
+  created_at timestamptz not null default now()
+);
+
+create table if not exists public.google_places_cache (
+  id uuid primary key default gen_random_uuid(),
+  place_id text unique not null,
+  name text not null,
+  segment text not null,
+  phone text,
+  website text,
+  city text not null,
+  state text not null,
+  formatted_address text,
+  payload jsonb not null default '{}'::jsonb,
+  status text not null default 'pending'
+    check (status in ('pending', 'approved', 'rejected', 'converted')),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
 alter table public.operators enable row level security;
 alter table public.administrators enable row level security;
 alter table public.health_plans enable row level security;
@@ -253,6 +296,8 @@ alter table public.agent_skills enable row level security;
 alter table public.agent_guardrails enable row level security;
 alter table public.agent_runs enable row level security;
 alter table public.human_approvals enable row level security;
+alter table public.inbound_webhook_events enable row level security;
+alter table public.google_places_cache enable row level security;
 
 grant usage on schema public to authenticated;
 grant select, insert, update, delete on all tables in schema public to authenticated;
@@ -279,6 +324,11 @@ create policy "authenticated manage messages" on public.messages for all to auth
 create policy "authenticated manage agent runs" on public.agent_runs for all to authenticated using (true) with check (true);
 create policy "authenticated manage approvals" on public.human_approvals for all to authenticated using (true) with check (true);
 
+create policy "anon insert webhook events" on public.inbound_webhook_events for insert to anon with check (true);
+create policy "authenticated manage webhook events" on public.inbound_webhook_events for all to authenticated using (true) with check (true);
+create policy "authenticated manage places cache" on public.google_places_cache for all to authenticated using (true) with check (true);
+create policy "anon read places cache" on public.google_places_cache for select to anon using (true);
+
 create index if not exists idx_health_plans_operator_id on public.health_plans(operator_id);
 create index if not exists idx_health_plans_administrator_id on public.health_plans(administrator_id);
 create index if not exists idx_health_plans_status on public.health_plans(status);
@@ -295,3 +345,8 @@ create index if not exists idx_messages_conversation_created on public.messages(
 create index if not exists idx_ans_chunks_document_id on public.ans_document_chunks(ans_document_id);
 create index if not exists idx_agent_runs_agent_created on public.agent_runs(agent_id, created_at desc);
 create index if not exists idx_human_approvals_status_created on public.human_approvals(status, created_at desc);
+
+create index if not exists idx_conversations_contact_identity on public.conversations(contact_identity);
+create index if not exists idx_inbound_webhook_events_created on public.inbound_webhook_events(created_at desc);
+create index if not exists idx_google_places_cache_segment_city on public.google_places_cache(segment, city);
+create index if not exists idx_google_places_cache_status on public.google_places_cache(status);

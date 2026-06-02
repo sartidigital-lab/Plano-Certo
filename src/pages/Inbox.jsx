@@ -9,6 +9,9 @@ import {
   sendConversationMessage,
 } from '../services/crmService.js';
 import ProductShell from '../layouts/ProductShell.jsx';
+import { supabase } from '../lib/supabaseClient.js';
+
+const isUuid = (val) => /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(String(val));
 
 export default function Inbox({ path, navigate }) {
   const initialConversations = listConversations();
@@ -26,6 +29,48 @@ export default function Inbox({ path, navigate }) {
   useEffect(() => {
     if (activeConversation?.id) loadMessages(activeConversation.id);
   }, [activeConversation?.id]);
+
+  useEffect(() => {
+    if (!supabase || !activeConversationId || !isUuid(activeConversationId)) return;
+
+    const channel = supabase
+      .channel(`realtime-inbox-${activeConversationId}`)
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'messages',
+          filter: `conversation_id=eq.${activeConversationId}`,
+        },
+        (payload) => {
+          const newMsg = payload.new;
+          const mappedMsg = {
+            id: newMsg.id,
+            from: newMsg.direction === 'inbound' || newMsg.sent_by === 'lead' ? 'lead' : 'agent',
+            text: newMsg.content,
+            status: newMsg.status,
+            createdAt: newMsg.created_at,
+          };
+
+          setMessages((current) => {
+            if (current.some((m) => m.id === mappedMsg.id)) return current;
+            const optIndex = current.findIndex((m) => m.text === mappedMsg.text && m.status === 'sending');
+            if (optIndex !== -1 && mappedMsg.from === 'agent') {
+              const updated = [...current];
+              updated[optIndex] = mappedMsg;
+              return updated;
+            }
+            return [...current, mappedMsg];
+          });
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [activeConversationId]);
 
   async function loadConversations() {
     setLoadState({ status: 'loading', message: 'Carregando conversas...' });

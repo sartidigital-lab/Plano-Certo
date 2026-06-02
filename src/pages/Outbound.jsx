@@ -1,14 +1,19 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { GuardrailsCard, LeadTriageCard, SequenceCard } from '../components/outbound/OutboundCards.jsx';
 import Metric from '../components/ui/Metric.jsx';
 import WorkspaceTop from '../components/workspace/WorkspaceTop.jsx';
 import { listOutboundSteps } from '../services/agentService.js';
+import { fetchProspects, updateProspectStatus, convertProspectToLead } from '../services/crmService.js';
 import ProductShell from '../layouts/ProductShell.jsx';
 
 const defaultMessage = 'Ola, Clinica Soma. Vi que voces atendem empresas na regiao e parecem ter uma equipe em crescimento. Empresas de saude com 30 a 50 vidas costumam perder muito tempo comparando rede, reajuste e coparticipacao. Posso te enviar uma analise objetiva com 3 caminhos de plano empresarial?';
 
 export default function Outbound({ path, navigate }) {
   const outboundSteps = listOutboundSteps();
+  const [prospects, setProspects] = useState([]);
+  const [filterSegment, setFilterSegment] = useState('');
+  const [filterCity, setFilterCity] = useState('');
+
   const [brief, setBrief] = useState({
     company: '',
     segment: '',
@@ -18,6 +23,48 @@ export default function Outbound({ path, navigate }) {
   });
   const [message, setMessage] = useState(defaultMessage);
   const [copyLabel, setCopyLabel] = useState('Copiar');
+
+  useEffect(() => {
+    loadProspects();
+  }, []);
+
+  async function loadProspects() {
+    try {
+      const data = await fetchProspects();
+      setProspects(data);
+    } catch (err) {
+      console.warn('Usando prospects mockados devido a erro:', err.message);
+      setProspects([
+        { id: 'prospect-1', name: 'Clinica Soma', segment: 'Saude', phone: '+55 11 99999-1111', website: 'soma.com.br', city: 'São Paulo', state: 'SP', status: 'pending' },
+        { id: 'prospect-2', name: 'Logistica Vetta', segment: 'Logistica', phone: '+55 48 98888-2222', website: 'vetta.com.br', city: 'Florianopolis', state: 'SC', status: 'pending' },
+        { id: 'prospect-3', name: 'Studio Atlas', segment: 'Design', phone: '+55 21 97777-3333', website: 'atlas.design', city: 'Rio de Janeiro', state: 'RJ', status: 'pending' }
+      ]);
+    }
+  }
+
+  async function handleDiscard(id) {
+    try {
+      await updateProspectStatus(id, 'rejected');
+      setProspects((current) => current.filter((p) => p.id !== id));
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async function handleConvert(prospect) {
+    try {
+      await convertProspectToLead(prospect);
+      setProspects((current) => current.filter((p) => p.id !== prospect.id));
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  const filteredProspects = prospects.filter((p) => {
+    const matchSegment = !filterSegment || String(p.segment || '').toLowerCase().includes(filterSegment.toLowerCase());
+    const matchCity = !filterCity || String(p.city || '').toLowerCase().includes(filterCity.toLowerCase());
+    return matchSegment && matchCity;
+  });
 
   function updateBrief(field, value) {
     setBrief((current) => ({ ...current, [field]: value }));
@@ -55,9 +102,9 @@ export default function Outbound({ path, navigate }) {
         ]}
       />
       <section className="kpi-row" aria-label="Indicadores do agente outbound">
-        <Metric value="126" label="empresas mapeadas no Google" />
-        <Metric value="41" label="com telefone validado" />
-        <Metric value="9" label="prontas para aprovação" />
+        <Metric value={String(prospects.length)} label="empresas mapeadas no Google" />
+        <Metric value={String(prospects.filter(p => p.phone).length)} label="com telefone validado" />
+        <Metric value={String(prospects.filter(p => p.status === 'pending').length)} label="prontas para aprovação" />
         <Metric value="18%" label="resposta em sequências WhatsApp" />
       </section>
       <section className="outbound-flow" aria-label="Fluxo outbound">
@@ -103,8 +150,12 @@ export default function Outbound({ path, navigate }) {
         </article>
       </section>
       <section className="section section--tight">
+        <div style={{ display: 'flex', gap: '12px', marginBottom: '16px', maxWidth: '600px' }}>
+          <input className="input" style={{ flex: 1 }} value={filterSegment} onChange={(e) => setFilterSegment(e.target.value)} placeholder="Filtrar por segmento (ex: Saude)..." aria-label="Filtrar segmento" />
+          <input className="input" style={{ flex: 1 }} value={filterCity} onChange={(e) => setFilterCity(e.target.value)} placeholder="Filtrar por cidade (ex: São Paulo)..." aria-label="Filtrar cidade" />
+        </div>
         <div className="outbound-board">
-          <LeadTriageCard />
+          <LeadTriageCard prospects={filteredProspects} onDiscard={handleDiscard} onConvert={handleConvert} />
           <SequenceCard />
           <GuardrailsCard />
         </div>

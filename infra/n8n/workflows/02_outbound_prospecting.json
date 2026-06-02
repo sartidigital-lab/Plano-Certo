@@ -1,0 +1,136 @@
+{
+  "name": "02 - Google Places Prospecting & Scraper",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": "daily",
+        "time": "08:00"
+      },
+      "id": "cron-trigger-node",
+      "name": "Daily Scraper Trigger",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [200, 300]
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "table": "scrape_configs",
+        "additionalOptions": {}
+      },
+      "id": "supabase-get-target-criteria",
+      "name": "Get Search Criteria",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [400, 300]
+    },
+    {
+      "parameters": {
+        "url": "https://maps.googleapis.com/maps/api/place/textsearch/json",
+        "qs": {
+          "query": "={{ $json.query }} em {{ $json.city }} - {{ $json.state }}",
+          "key": "YOUR_GOOGLE_MAPS_API_KEY"
+        }
+      },
+      "id": "google-places-text-search",
+      "name": "Google Places Search",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [620, 300]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "results",
+        "options": {}
+      },
+      "id": "split-results-array",
+      "name": "Split Prospects List",
+      "type": "n8n-nodes-base.itemLists",
+      "typeVersion": 1,
+      "position": [840, 300]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "table": "google_places_cache",
+        "dataAndFieldsMappping": {
+          "columns": [
+            {
+              "column": "place_id",
+              "value": "={{ $json.place_id }}"
+            },
+            {
+              "column": "name",
+              "value": "={{ $json.name }}"
+            },
+            {
+              "column": "segment",
+              "value": "={{ $json.types[0] }}"
+            },
+            {
+              "column": "formatted_address",
+              "value": "={{ $json.formatted_address }}"
+            },
+            {
+              "column": "payload",
+              "value": "={{ $json }}"
+            }
+          ]
+        }
+      },
+      "id": "supabase-insert-cache",
+      "name": "Upsert to Cache",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [1060, 300]
+    }
+  ],
+  "connections": {
+    "Daily Scraper Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get Search Criteria",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Search Criteria": {
+      "main": [
+        [
+          {
+            "node": "Google Places Search",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Places Search": {
+      "main": [
+        [
+          {
+            "node": "Split Prospects List",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Prospects List": {
+      "main": [
+        [
+          {
+            "node": "Upsert to Cache",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {}
+}

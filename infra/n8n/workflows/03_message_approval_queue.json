@@ -1,0 +1,162 @@
+{
+  "name": "03 - Outbound Message Sender (Human Approvals)",
+  "nodes": [
+    {
+      "parameters": {
+        "pollInterval": 5,
+        "operation": "select",
+        "table": "human_approvals",
+        "conditions": {
+          "status": "approved"
+        }
+      },
+      "id": "supabase-poll-approvals",
+      "name": "Poll Approved Messages",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [200, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.channel }}",
+              "value2": "instagram"
+            }
+          ]
+        }
+      },
+      "id": "switch-channel-outbound",
+      "name": "Route Outbound Channel",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [420, 300]
+    },
+    {
+      "parameters": {
+        "url": "https://graph.facebook.com/v19.0/{{ $json.phone_number_id }}/messages",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer YOUR_META_CLOUD_API_ACCESS_TOKEN",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "messaging_product": "whatsapp",
+          "to": "={{ $json.contact_identity }}",
+          "type": "text",
+          "text": {
+            "body": "={{ $json.proposed_message }}"
+          }
+        }
+      },
+      "id": "meta-whatsapp-cloud-api",
+      "name": "Send WhatsApp Message",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [680, 200]
+    },
+    {
+      "parameters": {
+        "url": "https://graph.facebook.com/v19.0/me/messages",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer YOUR_META_CLOUD_API_ACCESS_TOKEN",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "recipient": {
+            "id": "={{ $json.contact_identity }}"
+          },
+          "message": {
+            "text": "={{ $json.proposed_message }}"
+          }
+        }
+      },
+      "id": "meta-instagram-api",
+      "name": "Send Instagram Message",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [680, 400]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "table": "messages",
+        "id": "={{ $json.message_id }}",
+        "dataAndFieldsMappping": {
+          "columns": [
+            {
+              "column": "status",
+              "value": "sent"
+            },
+            {
+              "column": "sent_at",
+              "value": "={{ new Date().toISOString() }}"
+            }
+          ]
+        }
+      },
+      "id": "supabase-update-message-status",
+      "name": "Update Message Status",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [950, 300]
+    }
+  ],
+  "connections": {
+    "supabase-poll-approvals": {
+      "main": [
+        [
+          {
+            "node": "Route Outbound Channel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route Outbound Channel": {
+      "main": [
+        [
+          {
+            "node": "meta-whatsapp-cloud-api",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "meta-instagram-api",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "meta-whatsapp-cloud-api": {
+      "main": [
+        [
+          {
+            "node": "supabase-update-message-status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "meta-instagram-api": {
+      "main": [
+        [
+          {
+            "node": "supabase-update-message-status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {}
+}

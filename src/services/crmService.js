@@ -64,8 +64,8 @@ export async function fetchConversations() {
   if (!supabase) return listConversations();
 
   const { data, error } = await supabase
-    .from('whatsapp_conversations')
-    .select('id, lead_id, phone_number, channel, assigned_to_consultant, handoff_at, status, created_at, updated_at, leads(company_name, region, segment, score)')
+    .from('conversations')
+    .select('id, lead_id, contact_identity, channel, assigned_to_consultant, handoff_at, status, created_at, updated_at, leads(company_name, region, segment, score)')
     .order('updated_at', { ascending: false })
     .limit(30);
 
@@ -142,7 +142,7 @@ export async function claimConversation(conversationId) {
   if (!supabase || !isUuid(conversationId)) return { id: conversationId, mode: 'mock' };
 
   const { data, error } = await supabase
-    .from('whatsapp_conversations')
+    .from('conversations')
     .update({
       assigned_to_consultant: true,
       handoff_at: new Date().toISOString(),
@@ -167,14 +167,14 @@ function mapConversation(conversation) {
   return {
     id: conversation.id,
     leadId: conversation.lead_id,
-    company: lead.company_name || conversation.phone_number || 'Contato sem nome',
+    company: lead.company_name || conversation.contact_identity || 'Contato sem nome',
     channel,
     summary: buildConversationSummary(conversation, lead),
     score: lead.score || (conversation.assigned_to_consultant ? 82 : 68),
     status: conversation.assigned_to_consultant ? 'success' : 'warn',
     conversationStatus: conversation.status || 'active',
     assignedToConsultant: Boolean(conversation.assigned_to_consultant),
-    meta: [lead.segment, lead.region, conversation.phone_number].filter(Boolean).join(' · ') || 'Contexto a confirmar',
+    meta: [lead.segment, lead.region, conversation.contact_identity].filter(Boolean).join(' · ') || 'Contexto a confirmar',
     updatedAt: conversation.updated_at || conversation.created_at,
   };
 }
@@ -213,3 +213,112 @@ function normalizeLeadStatus(status, pipelineStage, scoreBand) {
   if (status === 'nurture') return 'Nutrir';
   return status || 'Novo';
 }
+
+export async function fetchProspects() {
+  if (!supabase) {
+    return [
+      { id: 'prospect-1', name: 'Clinica Soma', segment: 'Saude', phone: '+55 11 99999-1111', website: 'soma.com.br', city: 'São Paulo', state: 'SP', status: 'pending' },
+      { id: 'prospect-2', name: 'Logistica Vetta', segment: 'Logistica', phone: '+55 48 98888-2222', website: 'vetta.com.br', city: 'Florianopolis', state: 'SC', status: 'pending' },
+      { id: 'prospect-3', name: 'Studio Atlas', segment: 'Design', phone: '+55 21 97777-3333', website: 'atlas.design', city: 'Rio de Janeiro', state: 'RJ', status: 'pending' }
+    ];
+  }
+
+  const { data, error } = await supabase
+    .from('google_places_cache')
+    .select('*')
+    .eq('status', 'pending')
+    .order('created_at', { ascending: false });
+
+  if (error) throw error;
+  return data || [];
+}
+
+export async function updateProspectStatus(id, status) {
+  if (!supabase) return { id, status, mode: 'mock' };
+
+  const { data, error } = await supabase
+    .from('google_places_cache')
+    .update({ status, updated_at: new Date().toISOString() })
+    .eq('id', id)
+    .select()
+    .single();
+
+  if (error) throw error;
+  return { ...data, mode: 'supabase' };
+}
+
+export async function convertProspectToLead(prospect) {
+  if (!supabase) {
+    return { success: true, mode: 'mock' };
+  }
+
+  // 1. Create company
+  const { data: company, error: companyError } = await supabase
+    .from('companies')
+    .insert({
+      trade_name: prospect.name,
+      segment: prospect.segment,
+      city: prospect.city,
+      state: prospect.state,
+      estimated_lives: 15,
+      current_provider: 'Nenhum',
+      source: 'Google Places'
+    })
+    .select('id')
+    .single();
+
+  if (companyError) throw companyError;
+
+  // 2. Create contact
+  const { data: contact, error: contactError } = await supabase
+    .from('contacts')
+    .insert({
+      company_id: company.id,
+      name: prospect.name + ' - Contato Principal',
+      phone: prospect.phone,
+      whatsapp_opt_in: true
+    })
+    .select('id')
+    .single();
+
+  if (contactError) throw contactError;
+
+  // 3. Create lead
+  const { data: lead, error: leadError } = await supabase
+    .from('leads')
+    .insert({
+      company_id: company.id,
+      primary_contact_id: contact.id,
+      origin_channel: 'Google Places',
+      score: 70,
+      status: 'new'
+    })
+    .select('id')
+    .single();
+
+  if (leadError) throw leadError;
+
+  // 4. Create conversation
+  const { error: convError } = await supabase
+    .from('conversations')
+    .insert({
+      lead_id: lead.id,
+      channel: 'whatsapp',
+      contact_identity: prospect.phone,
+      status: 'open',
+      assigned_to_consultant: false
+    });
+
+  if (convError) throw convError;
+
+  // 5. Update prospect status in cache
+  const { error: updateError } = await supabase
+    .from('google_places_cache')
+    .update({ status: 'converted', updated_at: new Date().toISOString() })
+    .eq('id', prospect.id);
+
+  if (updateError) throw updateError;
+
+  return { success: true, companyId: company.id, leadId: lead.id, mode: 'supabase' };
+}
+

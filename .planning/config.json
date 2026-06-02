@@ -1,0 +1,11 @@
+{
+  "project_name": "Plano Certo",
+  "workflow_version": "1.0",
+  "preferences": {
+    "auto_commit": false,
+    "require_human_approval_for_outbound": true,
+    "styling": "css-vanilla",
+    "channels": ["whatsapp", "instagram"],
+    "single_tenant": true
+  }
+}

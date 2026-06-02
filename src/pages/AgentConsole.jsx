@@ -1,23 +1,54 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Metric from '../components/ui/Metric.jsx';
 import WorkspaceTop from '../components/workspace/WorkspaceTop.jsx';
 import useAsyncResource from '../hooks/useAsyncResource.js';
-import { fetchAgentProfiles, listAgentProfiles, listAgentReviewQueue, listAgentRuns, listVoicePrinciples } from '../services/agentService.js';
+import { fetchAgentProfiles, listAgentProfiles, listAgentRuns, listVoicePrinciples, fetchPendingApprovals, updateApprovalStatus, fetchAgentRuns } from '../services/agentService.js';
 import ProductShell from '../layouts/ProductShell.jsx';
 
 export default function AgentConsole({ path, navigate }) {
   const { data: agentProfiles, status } = useAsyncResource(fetchAgentProfiles, listAgentProfiles(), []);
-  const agentRuns = listAgentRuns();
+  const { data: agentRuns } = useAsyncResource(fetchAgentRuns, listAgentRuns(), []);
   const voicePrinciples = listVoicePrinciples();
   const [activeAgentId, setActiveAgentId] = useState(agentProfiles[0]?.id || '');
-  const [reviews, setReviews] = useState(listAgentReviewQueue());
+  const [reviews, setReviews] = useState([]);
   const activeAgent = useMemo(
     () => agentProfiles.find((agent) => agent.id === activeAgentId) || agentProfiles[0],
-    [activeAgentId],
+    [activeAgentId, agentProfiles],
   );
 
-  function updateReview(reviewId, status) {
-    setReviews((current) => current.map((review) => review.id === reviewId ? { ...review, status } : review));
+  const averageHumanScore = useMemo(() => {
+    if (!agentProfiles || agentProfiles.length === 0) return 0;
+    const sum = agentProfiles.reduce((acc, p) => acc + Number(p.humanScore || 0), 0);
+    return Math.round(sum / agentProfiles.length);
+  }, [agentProfiles]);
+
+  const complianceBlocks = useMemo(() => {
+    if (!agentRuns) return 0;
+    return agentRuns.filter((run) => run[3] === 'Bloqueado' || run[3] === 'blocked').length;
+  }, [agentRuns]);
+
+  useEffect(() => {
+    loadReviews();
+  }, []);
+
+  async function loadReviews() {
+    try {
+      const data = await fetchPendingApprovals();
+      setReviews(data);
+    } catch (err) {
+      console.warn('Erro ao carregar revisões reais:', err.message);
+    }
+  }
+
+  async function updateReview(reviewId, statusValue) {
+    setReviews((current) => current.map((review) => review.id === reviewId ? { ...review, status: statusValue } : review));
+    try {
+      await updateApprovalStatus(reviewId, statusValue);
+      setReviews((current) => current.filter((review) => review.id !== reviewId));
+    } catch (err) {
+      console.error('Falha ao atualizar revisão no Supabase:', err);
+      loadReviews();
+    }
   }
 
   return (
@@ -33,10 +64,10 @@ export default function AgentConsole({ path, navigate }) {
       />
 
       <section className="kpi-row">
-        <Metric value="4" label="agentes configurados" />
-        <Metric value="89" label="score médio de humanização" />
-        <Metric value={reviews.length} label="respostas em revisão" />
-        <Metric value="1" label="bloqueio compliance hoje" />
+        <Metric value={String(agentProfiles.length)} label="agentes configurados" />
+        <Metric value={String(averageHumanScore)} label="score médio de humanização" />
+        <Metric value={String(reviews.length)} label="respostas em revisão" />
+        <Metric value={String(complianceBlocks)} label="bloqueio compliance hoje" />
       </section>
 
       <section className="agent-console-grid">

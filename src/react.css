@@ -94,6 +94,7 @@
   color: var(--fg);
   background: var(--surface);
   text-align: left;
+  transition: var(--transition-smooth);
 }
 
 .catalog-row:last-child,
@@ -105,7 +106,7 @@
 .catalog-row.is-active,
 .price-row:hover,
 .price-row.is-active {
-  background: oklch(98% 0.006 250);
+  background: var(--accent-soft);
 }
 
 .detail-panel,
@@ -189,7 +190,7 @@
 .knowledge-card {
   width: 100%;
   text-align: left;
-  transition: 160ms ease;
+  transition: var(--transition-smooth);
 }
 
 .knowledge-card p {
@@ -198,8 +199,10 @@
 
 .knowledge-card:hover,
 .knowledge-card.is-active {
-  border-color: color-mix(in oklch, var(--accent), var(--border) 42%);
-  background: oklch(98% 0.006 250);
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px 0 rgba(37, 99, 235, 0.08);
 }
 
 .citation-box {
@@ -461,6 +464,7 @@
   background: var(--surface);
   padding: 14px;
   text-align: left;
+  transition: var(--transition-smooth);
 }
 
 .agent-console-card p {
@@ -469,9 +473,12 @@
 }
 
 .agent-console-card:hover,
-.agent-console-card.is-active {
-  border-color: color-mix(in oklch, var(--accent), var(--border) 42%);
-  background: oklch(98% 0.006 250);
+.agent-console-card.is-active,
+.review-card:hover {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px 0 rgba(37, 99, 235, 0.08);
 }
 
 .agent-console-wide {

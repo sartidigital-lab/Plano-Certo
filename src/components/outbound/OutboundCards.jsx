@@ -1,16 +1,38 @@
 import LeadRow from '../leads/LeadRow.jsx';
 
-export function LeadTriageCard() {
+export function LeadTriageCard({ prospects = [], onDiscard, onConvert }) {
   return (
-    <article className="card">
+    <article className="card" style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
       <div className="toolbar toolbar-between">
         <h3 className="flush">Lista Google em triagem</h3>
-        <span className="pill">SP capital</span>
+        <span className="pill">{prospects.length} pendentes</span>
       </div>
-      <div className="lead-list card-list">
-        <LeadRow company="Clinica Soma" detail="Google Business ativo · 32 vidas estimadas · telefone publico" score="92" />
-        <LeadRow company="Logistica Vetta" detail="Nova filial · 72 vidas estimadas · site com RH" score="84" />
-        <LeadRow company="Studio Atlas" detail="Equipe em expansão · primeira contratação PJ provável" score="76" />
+      <div className="lead-list card-list" style={{ display: 'grid', gap: '12px', maxHeight: '420px', overflowY: 'auto' }}>
+        {prospects.length === 0 ? (
+          <p className="muted" style={{ padding: '8px' }}>Nenhum prospect pendente.</p>
+        ) : (
+          prospects.map((prospect) => (
+            <div key={prospect.id} className="lead-row" style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '8px', padding: '14px', border: '1px solid var(--border)', borderRadius: '12px', background: 'var(--surface)' }}>
+              <div>
+                <strong style={{ fontSize: '15px' }}>{prospect.name}</strong>
+                <div className="muted" style={{ fontSize: '12px', marginTop: '4px', display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                  <span>📍 {prospect.city} · {prospect.state}</span>
+                  <span>💼 {prospect.segment}</span>
+                  {prospect.phone && <span>📞 {prospect.phone}</span>}
+                  {prospect.website && <span>🌐 {prospect.website}</span>}
+                </div>
+              </div>
+              <div className="toolbar" style={{ gap: '8px' }}>
+                <button className="btn btn--primary" style={{ minHeight: '32px', fontSize: '12px', padding: '0 12px' }} onClick={() => onConvert(prospect)}>
+                  Converter em Lead
+                </button>
+                <button className="btn" style={{ minHeight: '32px', fontSize: '12px', padding: '0 12px', color: 'var(--danger)', borderColor: 'var(--border)' }} onClick={() => onDiscard(prospect.id)}>
+                  Descartar
+                </button>
+              </div>
+            </div>
+          ))
+        )}
       </div>
     </article>
   );

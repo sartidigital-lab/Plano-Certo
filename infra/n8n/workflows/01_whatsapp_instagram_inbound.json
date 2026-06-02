@@ -1,0 +1,151 @@
+{
+  "name": "01 - Inbound Webhook (WhatsApp & Instagram) RAG Router",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "meta-webhook",
+        "options": {}
+      },
+      "id": "webhook-trigger-node",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.body.object }}",
+              "value2": "instagram"
+            }
+          ]
+        }
+      },
+      "id": "switch-node-channel",
+      "name": "Detect Channel",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "table": "inbound_webhook_events",
+        "dataAndFieldsMappping": {
+          "columns": [
+            {
+              "column": "channel",
+              "value": "instagram"
+            },
+            {
+              "column": "payload",
+              "value": "={{ $json.body }}"
+            }
+          ]
+        }
+      },
+      "id": "supabase-insert-ig-event",
+      "name": "Log IG Event",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [680, 200]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "table": "inbound_webhook_events",
+        "dataAndFieldsMappping": {
+          "columns": [
+            {
+              "column": "channel",
+              "value": "whatsapp"
+            },
+            {
+              "column": "payload",
+              "value": "={{ $json.body }}"
+            }
+          ]
+        }
+      },
+      "id": "supabase-insert-wa-event",
+      "name": "Log WA Event",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [680, 400]
+    },
+    {
+      "parameters": {
+        "model": "text-embedding-3-small",
+        "text": "={{ $json.message_body }}"
+      },
+      "id": "openai-embedding-node",
+      "name": "OpenAI Embeddings",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [950, 300]
+    },
+    {
+      "parameters": {
+        "operation": "rpc",
+        "function": "match_document_chunks",
+        "rpcArguments": {
+          "query_embedding": "={{ $json.embedding }}",
+          "match_threshold": 0.7,
+          "match_count": 3
+        }
+      },
+      "id": "supabase-rpc-node",
+      "name": "Search ANS chunks (RAG)",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [1180, 300]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o-mini",
+        "prompt": "Consult context: {{ $json.chunks }} ... Message: {{ $json.incoming_message }}"
+      },
+      "id": "openai-completions-node",
+      "name": "Generate Inbound Reply",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [1400, 300]
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Detect Channel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Detect Channel": {
+      "main": [
+        [
+          {
+            "node": "Log IG Event",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Log WA Event",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {}
+}

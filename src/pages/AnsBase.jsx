@@ -31,9 +31,9 @@ export default function AnsBase({ path, navigate }) {
       />
 
       <section className="kpi-row">
-        <Metric value={ansKnowledge.length} label="documentos mockados" />
-        <Metric value="3" label="prontos para uso" />
-        <Metric value="1" label="em revisão" />
+        <Metric value={ansKnowledge.length} label="documentos catalogados" />
+        <Metric value={ansKnowledge.filter((doc) => doc.status === 'Ativo' || doc.status === 'active').length} label="prontos para uso" />
+        <Metric value={ansKnowledge.filter((doc) => doc.status !== 'Ativo' && doc.status !== 'active').length} label="em revisão" />
         <Metric value="100%" label="respostas exigem fonte" />
       </section>
 
