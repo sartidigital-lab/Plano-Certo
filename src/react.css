@@ -172,7 +172,7 @@
 
 .mini-price-head {
   color: var(--muted);
-  background: oklch(98% 0.006 250);
+  background: var(--table-head-bg);
   font-family: var(--font-mono);
   font-size: 12px;
 }
@@ -257,7 +257,7 @@
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 14px;
-  background: oklch(99% 0.003 250);
+  background: var(--card-nested-bg);
 }
 
 .handoff-card p {
@@ -368,7 +368,7 @@
   border: 1px solid var(--border);
   border-radius: 12px;
   padding: 12px;
-  background: oklch(99% 0.003 250);
+  background: var(--card-nested-bg);
 }
 
 .timeline-item strong,
@@ -410,7 +410,7 @@
 
 .quote-head {
   color: var(--muted);
-  background: oklch(98% 0.006 250);
+  background: var(--table-head-bg);
   font-family: var(--font-mono);
   font-size: 12px;
 }
@@ -499,7 +499,7 @@
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 14px;
-  background: oklch(99% 0.003 250);
+  background: var(--card-nested-bg);
 }
 
 .guardrail-box ul,
@@ -528,7 +528,7 @@
   border: 1px solid var(--border);
   border-radius: 12px;
   padding: 12px;
-  background: oklch(99% 0.003 250);
+  background: var(--card-nested-bg);
 }
 
 .run-item strong {

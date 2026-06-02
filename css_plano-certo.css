@@ -23,6 +23,8 @@
   --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.06);
   --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   --gradient-start: oklch(98% 0.005 250);
+  --card-nested-bg: oklch(99% 0.003 250);
+  --table-head-bg: oklch(98% 0.006 250);
   color-scheme: light dark;
 }
 
@@ -46,6 +48,8 @@
     --glass-border: rgba(255, 255, 255, 0.06);
     --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
     --gradient-start: oklch(14% 0.01 250);
+    --card-nested-bg: rgba(255, 255, 255, 0.04);
+    --table-head-bg: rgba(255, 255, 255, 0.06);
   }
 }
 
@@ -666,7 +670,7 @@ h3 {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 16px;
-  background: oklch(98% 0.006 250);
+  background: var(--card-nested-bg);
   color: var(--fg);
   font-size: 17px;
   line-height: 1.55;
