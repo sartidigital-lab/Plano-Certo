@@ -35,15 +35,14 @@ export default function Home({ navigate, onSessionChange }) {
   return (
     <main className="login-page">
       <section className="login-shell" aria-label="Acesso ao Plano Certo">
-        <div className="login-brand">
-          <Brand navigate={navigate} />
-          <span className={`status ${dataMode.mode === 'supabase-configured' ? 'status--success' : 'status--warn'}`}>
-            {dataMode.mode === 'supabase-configured' ? 'Dados conectados' : 'Modo demo'}
-          </span>
-        </div>
-
         <div className="login-layout">
           <section className="login-copy">
+            <div className="login-brand">
+              <Brand navigate={navigate} />
+              <span className={`status ${dataMode.mode === 'supabase-configured' ? 'status--success' : 'status--warn'}`}>
+                {dataMode.mode === 'supabase-configured' ? 'Dados conectados' : 'Modo demo'}
+              </span>
+            </div>
             <p className="eyebrow">Console operacional</p>
             <h1>Entre para priorizar leads, revisar agentes e acompanhar propostas.</h1>
             <p className="lede">A primeira tela agora abre como produto: foco em rotina comercial, fila de atendimento, governanca dos agentes e base de planos.</p>
